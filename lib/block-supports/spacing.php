@@ -47,7 +47,7 @@ function gutenberg_apply_spacing_support( $block_type, $block_attributes ) {
 	$has_margin_support  = gutenberg_block_has_support( $block_type, array( 'spacing', 'margin' ), false );
 	$styles              = array();
 
-	if ( $has_padding_support ) {
+	if ( $has_padding_support && ! gutenberg_skip_spacing_serialization( $block_type, 'padding' ) ) {
 		$padding_value = _wp_array_get( $block_attributes, array( 'style', 'spacing', 'padding' ), null );
 
 		if ( is_array( $padding_value ) ) {
@@ -59,7 +59,7 @@ function gutenberg_apply_spacing_support( $block_type, $block_attributes ) {
 		}
 	}
 
-	if ( $has_margin_support ) {
+	if ( $has_margin_support && ! gutenberg_skip_spacing_serialization( $block_type, 'margin' ) ) {
 		$margin_value = _wp_array_get( $block_attributes, array( 'style', 'spacing', 'margin' ), null );
 
 		if ( is_array( $margin_value ) ) {
@@ -79,15 +79,19 @@ function gutenberg_apply_spacing_support( $block_type, $block_attributes ) {
  * occur.
  *
  * @param WP_Block_type $block_type Block type.
+ * @param string        $feature    Optional name of individual feature to check.
  *
  * @return boolean Whether to serialize spacing support styles & classes.
  */
-function gutenberg_skip_spacing_serialization( $block_type ) {
-	$spacing_support = _wp_array_get( $block_type->supports, array( 'spacing' ), false );
+function gutenberg_skip_spacing_serialization( $block_type, $feature = null ) {
+	$path               = array( 'spacing', '__experimentalSkipSerialization' );
+	$skip_serialization = _wp_array_get( $block_type->supports, $path, false );
 
-	return is_array( $spacing_support ) &&
-		array_key_exists( '__experimentalSkipSerialization', $spacing_support ) &&
-		$spacing_support['__experimentalSkipSerialization'];
+	if ( is_array( $skip_serialization ) ) {
+		return in_array( $feature, $skip_serialization, true );
+	}
+
+	return $skip_serialization;
 }
 
 // Register the block support.
