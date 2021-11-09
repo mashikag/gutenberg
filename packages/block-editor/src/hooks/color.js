@@ -253,52 +253,48 @@ export function addSaveProps( props, blockType, attributes ) {
 	// I'd have preferred to avoid the "style" attribute usage here
 	const { backgroundColor, textColor, gradient, style } = attributes;
 
-	const colorClasses = {};
-
 	const shouldSerialize = ( feature ) =>
 		! shouldSkipSerialization( blockType, COLOR_SUPPORT_KEY, feature );
 
-	// Serialize background color classes.
-	if ( shouldSerialize( 'background' ) ) {
-		const backgroundClass = getColorClassName(
-			'background-color',
-			backgroundColor
-		);
+	// Primary color classes must come before the `has-text-color`,
+	// `has-background` and `has-link-color` classes to maintain backwards
+	// compatibility and avoid block invalidations.
+	const textClass = shouldSerialize( 'text' )
+		? getColorClassName( 'color', textColor )
+		: undefined;
 
-		// Don't apply the background class if there's a custom gradient
-		colorClasses[ backgroundClass ] =
-			( ! hasGradient || ! style?.color?.gradient ) && !! backgroundClass;
-	}
+	const gradientClass = shouldSerialize( 'gradients' )
+		? __experimentalGetGradientClass( gradient )
+		: undefined;
 
-	// Serialize gradient color class.
-	if ( shouldSerialize( 'gradients' ) ) {
-		const gradientClass = __experimentalGetGradientClass( gradient );
-		colorClasses[ gradientClass ] = gradientClass;
-	}
+	const backgroundClass = shouldSerialize( 'background' )
+		? getColorClassName( 'background-color', backgroundColor )
+		: undefined;
 
-	// Serialize `has-background` that applies when either background or
-	// gradient should be serialized.
-	if ( shouldSerialize( 'background' ) || shouldSerialize( 'gradients' ) ) {
-		colorClasses[ 'has-background' ] =
-			backgroundColor ||
-			style?.color?.background ||
-			( hasGradient && ( gradient || style?.color?.gradient ) );
-	}
+	const serializeHasBackground =
+		shouldSerialize( 'background' ) || shouldSerialize( 'gradients' );
+	const hasBackground =
+		backgroundColor ||
+		style?.color?.background ||
+		( hasGradient && ( gradient || style?.color?.gradient ) );
 
-	// Serialize text color classes.
-	if ( shouldSerialize( 'text' ) ) {
-		const textClass = getColorClassName( 'color', textColor );
-
-		colorClasses[ textClass ] = textClass;
-		colorClasses[ 'has-text-color' ] = textColor || style?.color?.text;
-	}
-
-	// Serialize link color class.
-	if ( shouldSerialize( 'link' ) ) {
-		colorClasses[ 'has-link-color' ] = style?.elements?.link?.color;
-	}
-
-	const newClassName = classnames( props.className, colorClasses );
+	const newClassName = classnames(
+		props.className,
+		textClass,
+		gradientClass,
+		{
+			// Don't apply the background class if there's a custom gradient
+			[ backgroundClass ]:
+				( ! hasGradient || ! style?.color?.gradient ) &&
+				!! backgroundClass,
+			'has-text-color':
+				shouldSerialize( 'text' ) &&
+				( textColor || style?.color?.text ),
+			'has-background': serializeHasBackground && hasBackground,
+			'has-link-color':
+				shouldSerialize( 'link' ) && style?.elements?.link?.color,
+		}
+	);
 	props.className = newClassName ? newClassName : undefined;
 
 	return props;
