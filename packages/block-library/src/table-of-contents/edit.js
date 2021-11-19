@@ -71,6 +71,7 @@ export default function TableOfContentsEdit( {
 				getBlockIndex,
 				getBlockName,
 				getBlockOrder,
+				getClientIdsOfDescendants,
 				getGlobalBlockCount,
 			} = select( blockEditorStore );
 			// FIXME: @wordpress/block-library should not depend on @wordpress/editor.
@@ -81,7 +82,15 @@ export default function TableOfContentsEdit( {
 			const isPaginated = getGlobalBlockCount( 'core/nextpage' ) !== 0;
 
 			const blockIndex = getBlockIndex( clientId );
-			const blockOrder = getBlockOrder();
+
+			// Get the top-level block client ids, and add them and the client ids of their children to an ordered list.
+			const allBlockClientIds = [];
+			for ( const blockClientId of getBlockOrder() ) {
+				allBlockClientIds.push( blockClientId );
+				allBlockClientIds.push(
+					...getClientIdsOfDescendants( [ blockClientId ] )
+				);
+			}
 
 			const _latestHeadings = [];
 
@@ -99,7 +108,7 @@ export default function TableOfContentsEdit( {
 				? addQueryArgs( permalink, { page: headingPage } )
 				: permalink;
 
-			for ( const [ i, blockClientId ] of blockOrder.entries() ) {
+			for ( const [ i, blockClientId ] of allBlockClientIds.entries() ) {
 				const blockName = getBlockName( blockClientId );
 				if ( blockName === 'core/nextpage' ) {
 					headingPage++;
