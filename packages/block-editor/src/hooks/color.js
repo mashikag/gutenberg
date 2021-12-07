@@ -611,13 +611,19 @@ export const withColorPaletteStyles = createHigherOrderComponent(
 		}
 		const extraStyles = {};
 
-		if ( textColor ) {
+		if (
+			textColor &&
+			! shouldSkipSerialization( name, COLOR_SUPPORT_KEY, 'text' )
+		) {
 			extraStyles.color = getColorObjectByAttributeValues(
 				colors,
 				textColor
 			)?.color;
 		}
-		if ( backgroundColor ) {
+		if (
+			backgroundColor &&
+			! shouldSkipSerialization( name, COLOR_SUPPORT_KEY, 'background' )
+		) {
 			extraStyles.backgroundColor = getColorObjectByAttributeValues(
 				colors,
 				backgroundColor
