@@ -12,7 +12,10 @@ import { __, _x } from '@wordpress/i18n';
 import { external } from '@wordpress/icons';
 import { displayShortcut } from '@wordpress/keycodes';
 import { useShortcut } from '@wordpress/keyboard-shortcuts';
-import { MoreMenuDropdown, MoreMenuFeatureToggle } from '@wordpress/interface';
+import {
+	MoreMenuDropdown,
+	MoreMenuFeatureToggle,
+} from '@wordpress/preferences';
 
 /**
  * Internal dependencies

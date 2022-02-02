@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
-import { MoreMenuFeatureToggle } from '@wordpress/interface';
+import { MoreMenuFeatureToggle } from '@wordpress/preferences';
 import { __ } from '@wordpress/i18n';
 
 /**

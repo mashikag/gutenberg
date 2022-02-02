@@ -1,4 +1,4 @@
-.interface-more-menu-dropdown {
+.preferences-more-menu-dropdown {
 	margin-left: -4px;
 
 	// the padding and margin of the more menu is intentionally non-standard
@@ -16,7 +16,7 @@
 	}
 }
 
-.interface-more-menu-dropdown__content .components-popover__content {
+.preferences-more-menu-dropdown__content .components-popover__content {
 	min-width: 280px;
 
 	// Let the menu scale to fit items.
@@ -30,6 +30,6 @@
 	}
 }
 
-.components-popover.interface-more-menu-dropdown__content {
-	z-index: z-index(".components-popover.edit-widgets-more-menu__content");
+.components-popover.preferences-more-menu-dropdown__content {
+	z-index: z-index(".components-popover.preferences-more-menu__content");
 }

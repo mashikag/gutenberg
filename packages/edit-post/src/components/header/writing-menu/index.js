@@ -5,7 +5,7 @@ import { MenuGroup } from '@wordpress/components';
 import { __, _x } from '@wordpress/i18n';
 import { useViewportMatch } from '@wordpress/compose';
 import { displayShortcut } from '@wordpress/keycodes';
-import { MoreMenuFeatureToggle } from '@wordpress/interface';
+import { MoreMenuFeatureToggle } from '@wordpress/preferences';
 
 function WritingMenu() {
 	const isLargeViewport = useViewportMatch( 'medium' );
