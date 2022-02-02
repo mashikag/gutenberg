@@ -4,10 +4,10 @@
 import { __ } from '@wordpress/i18n';
 import { Button, ExternalLink } from '@wordpress/components';
 import { useDispatch } from '@wordpress/data';
-import { store as interfaceStore } from '@wordpress/interface';
+import { store as preferencesStore } from '@wordpress/preferences';
 
 export default function WelcomeGuide( { sidebar } ) {
-	const { toggleFeature } = useDispatch( interfaceStore );
+	const { toggleFeature } = useDispatch( preferencesStore );
 
 	const isEntirelyBlockWidgets = sidebar
 		.getWidgets()

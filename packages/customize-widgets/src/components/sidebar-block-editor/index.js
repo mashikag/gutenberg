@@ -22,7 +22,7 @@ import {
 	__unstableEditorStyles as EditorStyles,
 } from '@wordpress/block-editor';
 import { uploadMedia } from '@wordpress/media-utils';
-import { store as interfaceStore } from '@wordpress/interface';
+import { store as preferencesStore } from '@wordpress/preferences';
 
 /**
  * Internal dependencies
@@ -48,7 +48,7 @@ export default function SidebarBlockEditor( {
 		keepCaretInsideBlock,
 		isWelcomeGuideActive,
 	} = useSelect( ( select ) => {
-		const { isFeatureActive } = select( interfaceStore );
+		const { isFeatureActive } = select( preferencesStore );
 		return {
 			hasUploadPermissions: defaultTo(
 				select( coreStore ).canUser( 'create', 'media' ),
