@@ -14,9 +14,10 @@ import {
 	__unstableMotion as motion,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { sidebar, navigation, styles, wordpress } from '@wordpress/icons';
+import { wordpress } from '@wordpress/icons';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { useReducedMotion } from '@wordpress/compose';
+import { PinnedItems } from '@wordpress/interface';
 
 /**
  * Internal dependencies
@@ -107,9 +108,7 @@ function NavigationToggle( { icon } ) {
 			>
 				{ buttonIcon }
 			</Button>
-			<Button icon={ navigation } iconSize={ 24 }></Button>
-			<Button icon={ sidebar } iconSize={ 24 }></Button>
-			<Button icon={ styles } iconSize={ 24 }></Button>
+			<PinnedItems.Slot scope="core/edit-site" />
 		</motion.div>
 	);
 }
