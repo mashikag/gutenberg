@@ -4,28 +4,14 @@
 import { FlexBlock, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { navigation } from '@wordpress/icons';
-import { useSelect } from '@wordpress/data';
-import {
-	store as blockEditorStore,
-	__experimentalListView as ListView,
-} from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
  */
-import DefaultSidebar from './default-sidebar';
+import DefaultSidebar from '../default-sidebar';
+import NavigationInspector from './navigation-inspector';
 
 export default function NavigationMenuSidebar() {
-	const { blocks } = useSelect( ( select ) => {
-		const { __unstableGetClientIdsTree, getSelectedBlockClientId } = select(
-			blockEditorStore
-		);
-		const clientId = getSelectedBlockClientId();
-		return {
-			blocks: __unstableGetClientIdsTree( clientId ),
-		};
-	}, [] );
-
 	return (
 		<DefaultSidebar
 			className="edit-site-navigation-menu-sidebar"
@@ -42,12 +28,7 @@ export default function NavigationMenuSidebar() {
 				</Flex>
 			}
 		>
-			<ListView
-				blocks={ blocks }
-				showNestedBlocks
-				__experimentalFeatures
-				__experimentalPersistentListViewFeatures
-			/>
+			<NavigationInspector />
 		</DefaultSidebar>
 	);
 }
