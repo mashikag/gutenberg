@@ -10,3 +10,4 @@ You may review the [finished app](https://github.com/WordPress/gutenberg-example
 
 1. [Setup](./1-data-basics-setup.md)
 2. [Building a basic list of pages](./2-building-a-list-of-pages.md)
+3. [Building an edit form](./3-building-an-edit-form.md)
