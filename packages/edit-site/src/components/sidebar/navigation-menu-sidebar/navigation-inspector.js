@@ -6,12 +6,15 @@ import {
 	store as blockEditorStore,
 	__experimentalListView as ListView,
 } from '@wordpress/block-editor';
+import { useEntityProp } from '@wordpress/core-data';
+import { __experimentalHeading as Heading } from '@wordpress/components';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const EMPTY_BLOCKS = [];
+
 export default function NavigationInspector() {
-	const { blocks } = useSelect( ( select ) => {
+	const { selectedNavigationId } = useSelect( ( select ) => {
 		const {
-			__unstableGetClientIdsTree,
 			getSelectedBlockClientId,
 			getBlockParentsByBlockName,
 			getBlockName,
@@ -31,23 +34,61 @@ export default function NavigationInspector() {
 			}
 		}
 		return {
-			blocks: clientId
-				? __unstableGetClientIdsTree( clientId )
-				: EMPTY_BLOCKS,
+			selectedNavigationId: clientId,
 		};
 	}, [] );
 
-	// No navigation blocks are not selected, render the first navigation menu available on the post or page.
-	if ( blocks === EMPTY_BLOCKS ) {
-		return 'todo: render first available navigation menu';
-	}
+	const { firstNavigationId } = useSelect( ( select ) => {
+		const { __unstableGetGlobalBlocksByName } = select( blockEditorStore );
+		const _navigationIds = __unstableGetGlobalBlocksByName(
+			'core/navigation'
+		);
+		return {
+			firstNavigationId: _navigationIds?.[ 0 ] ?? null,
+			navigationIds: _navigationIds,
+		};
+	}, [] );
+
+	const { blocks, navRef } = useSelect(
+		( select ) => {
+			const { __unstableGetClientIdsTree, getBlock } = select(
+				blockEditorStore
+			);
+			const clientId = selectedNavigationId ?? firstNavigationId;
+			return {
+				blocks: clientId
+					? __unstableGetClientIdsTree( clientId )
+					: EMPTY_BLOCKS,
+				navRef: getBlock( clientId )?.attributes?.ref ?? null,
+			};
+		},
+		[ selectedNavigationId, firstNavigationId ]
+	);
+
+	// eslint-disable-next-line no-unused-vars
+	const [ property, setter, title ] = useEntityProp(
+		'postType',
+		'wp_navigation',
+		'title',
+		navRef
+	);
+
+	const label = decodeEntities( title?.rendered );
 
 	return (
-		<ListView
-			blocks={ blocks }
-			showNestedBlocks
-			__experimentalFeatures
-			__experimentalPersistentListViewFeatures
-		/>
+		<>
+			<Heading
+				level={ 2 }
+				className={ 'edit-site-navigation-inspector__title' }
+			>
+				{ label }
+			</Heading>
+			<ListView
+				blocks={ blocks }
+				showNestedBlocks
+				__experimentalFeatures
+				__experimentalPersistentListViewFeatures
+			/>
+		</>
 	);
 }

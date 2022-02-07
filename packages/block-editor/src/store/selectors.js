@@ -278,6 +278,21 @@ export const getGlobalBlockCount = createSelector(
 	( state ) => [ state.blocks.order, state.blocks.byClientId ]
 );
 
+export const __unstableGetGlobalBlocksByName = createSelector(
+	( state, blockName ) => {
+		if ( ! blockName ) {
+			return EMPTY_ARRAY;
+		}
+		const clientIds = getClientIdsWithDescendants( state );
+		const foundBlocks = clientIds.filter( ( clientId ) => {
+			const block = state.blocks.byClientId[ clientId ];
+			return block.name === blockName;
+		} );
+		return foundBlocks.length > 0 ? foundBlocks : EMPTY_ARRAY;
+	},
+	( state ) => [ state.blocks.order, state.blocks.byClientId ]
+);
+
 /**
  * Given an array of block client IDs, returns the corresponding array of block
  * objects.
