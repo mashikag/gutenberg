@@ -1,7 +1,7 @@
 # Building a list of pages
 
 In this part, we will build a filterable list of all WordPress pages. This is what the app will look like at the end of
-this part:
+this section:
 
 ![](./media/list-of-pages/part1-finished.jpg)
 
