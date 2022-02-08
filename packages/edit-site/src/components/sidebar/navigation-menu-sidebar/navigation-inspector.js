@@ -2,87 +2,67 @@
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
+import { useState, useEffect } from '@wordpress/element';
 import {
 	store as blockEditorStore,
 	__experimentalListView as ListView,
 } from '@wordpress/block-editor';
-import { useEntityProp } from '@wordpress/core-data';
-import { __experimentalHeading as Heading } from '@wordpress/components';
-import { decodeEntities } from '@wordpress/html-entities';
+import { SelectControl } from '@wordpress/components';
 
 const EMPTY_BLOCKS = [];
 
 export default function NavigationInspector() {
 	const { selectedNavigationId } = useSelect( ( select ) => {
-		const {
-			getSelectedBlockClientId,
-			getBlockParentsByBlockName,
-			getBlockName,
-		} = select( blockEditorStore );
-		let clientId = getSelectedBlockClientId();
-		const selectedBlockName = getBlockName( clientId );
-		//if selected block isn't a navigation block, find closest parent who is
-		if ( selectedBlockName !== 'core/navigation' ) {
-			const navigationBlocks = getBlockParentsByBlockName(
-				clientId,
-				'core/navigation'
-			);
-			if ( navigationBlocks.length > 0 ) {
-				clientId = navigationBlocks[ 0 ];
-			} else {
-				clientId = undefined;
-			}
-		}
+		const { __experimentalGetActiveBlockIdByBlockNames } = select(
+			blockEditorStore
+		);
+		const selectedId = __experimentalGetActiveBlockIdByBlockNames(
+			'core/navigation'
+		);
 		return {
-			selectedNavigationId: clientId,
+			selectedNavigationId: selectedId,
 		};
 	}, [] );
 
-	const { firstNavigationId } = useSelect( ( select ) => {
+	const [ menu, setCurrentMenu ] = useState( selectedNavigationId );
+
+	useEffect( () => {
+		if ( selectedNavigationId ) {
+			setCurrentMenu( selectedNavigationId );
+		}
+	}, [ selectedNavigationId ] );
+
+	const { firstNavigationId, navigationIds } = useSelect( ( select ) => {
 		const { __unstableGetGlobalBlocksByName } = select( blockEditorStore );
 		const _navigationIds = __unstableGetGlobalBlocksByName(
 			'core/navigation'
 		);
 		return {
 			firstNavigationId: _navigationIds?.[ 0 ] ?? null,
-			navigationIds: _navigationIds,
+			navigationIds: _navigationIds.map( ( id ) => ( {
+				value: id,
+			} ) ),
 		};
 	}, [] );
 
-	const { blocks, navRef } = useSelect(
+	const { blocks } = useSelect(
 		( select ) => {
-			const { __unstableGetClientIdsTree, getBlock } = select(
-				blockEditorStore
-			);
-			const clientId = selectedNavigationId ?? firstNavigationId;
+			const { __unstableGetClientIdsTree } = select( blockEditorStore );
+			const id = menu || firstNavigationId;
 			return {
-				blocks: clientId
-					? __unstableGetClientIdsTree( clientId )
-					: EMPTY_BLOCKS,
-				navRef: getBlock( clientId )?.attributes?.ref ?? null,
+				blocks: id ? __unstableGetClientIdsTree( id ) : EMPTY_BLOCKS,
 			};
 		},
-		[ selectedNavigationId, firstNavigationId ]
+		[ menu, firstNavigationId ]
 	);
-
-	// eslint-disable-next-line no-unused-vars
-	const [ property, setter, title ] = useEntityProp(
-		'postType',
-		'wp_navigation',
-		'title',
-		navRef
-	);
-
-	const label = decodeEntities( title?.rendered );
 
 	return (
 		<>
-			<Heading
-				level={ 2 }
-				className={ 'edit-site-navigation-inspector__title' }
-			>
-				{ label }
-			</Heading>
+			<SelectControl
+				options={ navigationIds }
+				value={ menu || firstNavigationId }
+				onChange={ setCurrentMenu }
+			/>
 			<ListView
 				blocks={ blocks }
 				showNestedBlocks
