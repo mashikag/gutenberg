@@ -1,4 +1,11 @@
 /**
+ * WordPress dependencies
+ */
+import { controls } from '@wordpress/data';
+import deprecated from '@wordpress/deprecated';
+import { store as preferencesStore } from '@wordpress/preferences';
+
+/**
  * Returns an action object used in signalling that an active area should be changed.
  *
  * @param {string} itemType Type of item.
@@ -89,11 +96,18 @@ export function unpinItem( scope, itemId ) {
  * @param {string} scope       The feature scope (e.g. core/edit-post).
  * @param {string} featureName The feature name.
  */
-export function toggleFeature( scope, featureName ) {
-	return function ( { select, dispatch } ) {
-		const currentValue = select.isFeatureActive( scope, featureName );
-		dispatch.setFeatureValue( scope, featureName, ! currentValue );
-	};
+export function* toggleFeature( scope, featureName ) {
+	deprecated( `dispatch( 'core/interface' ).toggleFeature`, {
+		since: '6.0',
+		alternative: `dispatch( 'core/preferences' ).toggleFeature`,
+	} );
+
+	yield controls.dispatch(
+		preferencesStore.name,
+		'toggleFeature',
+		scope,
+		featureName
+	);
 }
 
 /**
@@ -106,13 +120,19 @@ export function toggleFeature( scope, featureName ) {
  *
  * @return {Object} Action object.
  */
-export function setFeatureValue( scope, featureName, value ) {
-	return {
-		type: 'SET_FEATURE_VALUE',
+export function* setFeatureValue( scope, featureName, value ) {
+	deprecated( `dispatch( 'core/interface' ).setFeatureValue`, {
+		since: '6.0',
+		alternative: `dispatch( 'core/preferences' ).setFeatureValue`,
+	} );
+
+	yield controls.dispatch(
+		preferencesStore.name,
+		'setFeatureValue',
 		scope,
 		featureName,
-		value: !! value,
-	};
+		value
+	);
 }
 
 /**
@@ -123,10 +143,16 @@ export function setFeatureValue( scope, featureName, value ) {
  *
  * @return {Object} Action object.
  */
-export function setFeatureDefaults( scope, defaults ) {
-	return {
-		type: 'SET_FEATURE_DEFAULTS',
+export function* setFeatureDefaults( scope, defaults ) {
+	deprecated( `dispatch( 'core/interface' ).setFeatureDefaults`, {
+		since: '6.0',
+		alternative: `dispatch( 'core/preferences' ).setFeatureDefaults`,
+	} );
+
+	yield controls.dispatch(
+		preferencesStore.name,
+		'setFeatureDefaults',
 		scope,
-		defaults,
-	};
+		defaults
+	);
 }
