@@ -12,38 +12,40 @@ import { SelectControl } from '@wordpress/components';
 const EMPTY_BLOCKS = [];
 
 export default function NavigationInspector() {
-	const { selectedNavigationId } = useSelect( ( select ) => {
-		const { __experimentalGetActiveBlockIdByBlockNames } = select(
-			blockEditorStore
-		);
-		const selectedId = __experimentalGetActiveBlockIdByBlockNames(
+	const {
+		selectedClientId,
+		selectedNavigationId,
+		firstNavigationId,
+		navigationIds,
+	} = useSelect( ( select ) => {
+		const {
+			__experimentalGetActiveBlockIdByBlockNames,
+			__unstableGetGlobalBlocksByName,
+			getSelectedBlockClientId,
+		} = select( blockEditorStore );
+		const selectedNavId = __experimentalGetActiveBlockIdByBlockNames(
 			'core/navigation'
 		);
+		const navIds = __unstableGetGlobalBlocksByName( 'core/navigation' );
 		return {
-			selectedNavigationId: selectedId,
+			selectedClientId: getSelectedBlockClientId(),
+			selectedNavigationId: selectedNavId,
+			firstNavigationId: navIds?.[ 0 ] ?? null,
+			navigationIds: navIds.map( ( id ) => ( {
+				value: id,
+			} ) ),
 		};
 	}, [] );
 
-	const [ menu, setCurrentMenu ] = useState( selectedNavigationId );
+	const [ menu, setCurrentMenu ] = useState(
+		selectedNavigationId || firstNavigationId
+	);
 
 	useEffect( () => {
 		if ( selectedNavigationId ) {
 			setCurrentMenu( selectedNavigationId );
 		}
-	}, [ selectedNavigationId ] );
-
-	const { firstNavigationId, navigationIds } = useSelect( ( select ) => {
-		const { __unstableGetGlobalBlocksByName } = select( blockEditorStore );
-		const _navigationIds = __unstableGetGlobalBlocksByName(
-			'core/navigation'
-		);
-		return {
-			firstNavigationId: _navigationIds?.[ 0 ] ?? null,
-			navigationIds: _navigationIds.map( ( id ) => ( {
-				value: id,
-			} ) ),
-		};
-	}, [] );
+	}, [ selectedNavigationId, selectedClientId ] );
 
 	const { blocks } = useSelect(
 		( select ) => {
@@ -56,13 +58,17 @@ export default function NavigationInspector() {
 		[ menu, firstNavigationId ]
 	);
 
+	const showSelectControl = navigationIds.length > 1;
+
 	return (
 		<>
-			<SelectControl
-				options={ navigationIds }
-				value={ menu || firstNavigationId }
-				onChange={ setCurrentMenu }
-			/>
+			{ showSelectControl && (
+				<SelectControl
+					options={ navigationIds }
+					value={ menu || firstNavigationId }
+					onChange={ setCurrentMenu }
+				/>
+			) }
 			<ListView
 				blocks={ blocks }
 				showNestedBlocks
