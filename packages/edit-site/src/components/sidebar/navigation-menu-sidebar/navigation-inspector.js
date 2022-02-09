@@ -9,6 +9,11 @@ import {
 } from '@wordpress/block-editor';
 import { SelectControl } from '@wordpress/components';
 
+/**
+ * Internal dependencies
+ */
+import NavigationOption from './navigation-option';
+
 const EMPTY_BLOCKS = [];
 
 export default function NavigationInspector() {
@@ -22,6 +27,7 @@ export default function NavigationInspector() {
 			__experimentalGetActiveBlockIdByBlockNames,
 			__unstableGetGlobalBlocksByName,
 			getSelectedBlockClientId,
+			getBlock,
 		} = select( blockEditorStore );
 		const selectedNavId = __experimentalGetActiveBlockIdByBlockNames(
 			'core/navigation'
@@ -31,8 +37,9 @@ export default function NavigationInspector() {
 			selectedClientId: getSelectedBlockClientId(),
 			selectedNavigationId: selectedNavId,
 			firstNavigationId: navIds?.[ 0 ] ?? null,
-			navigationIds: navIds.map( ( id ) => ( {
-				value: id,
+			navigationIds: navIds.map( ( navigationId ) => ( {
+				navigationId,
+				ref: getBlock( navigationId )?.attributes?.ref,
 			} ) ),
 		};
 	}, [] );
@@ -64,10 +71,19 @@ export default function NavigationInspector() {
 		<>
 			{ showSelectControl && (
 				<SelectControl
-					options={ navigationIds }
 					value={ menu || firstNavigationId }
 					onChange={ setCurrentMenu }
-				/>
+				>
+					{ navigationIds.map( ( { navigationId, ref } ) => {
+						return (
+							<NavigationOption
+								key={ navigationId }
+								navigationId={ navigationId }
+								postId={ ref }
+							/>
+						);
+					} ) }
+				</SelectControl>
 			) }
 			<ListView
 				blocks={ blocks }
