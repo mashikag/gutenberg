@@ -508,6 +508,10 @@ is important to do after selection by keyboard.
 
 Undocumented declaration.
 
+### NavigationInspector
+
+Undocumented declaration.
+
 ### ObserveTyping
 
 _Related_

@@ -3,16 +3,14 @@
  */
 import { useSelect } from '@wordpress/data';
 import { useState, useEffect } from '@wordpress/element';
-import {
-	store as blockEditorStore,
-	__experimentalListView as ListView,
-} from '@wordpress/block-editor';
 import { SelectControl } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
 import NavigationOption from './navigation-option';
+import { store as blockEditorStore } from '../../store';
+import ListView from '../list-view';
 
 const EMPTY_BLOCKS = [];
 
