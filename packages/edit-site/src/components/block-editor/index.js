@@ -15,6 +15,7 @@ import {
 	__experimentalLinkControl,
 	BlockInspector,
 	BlockTools,
+	__unstableBlockToolbarListView,
 	__unstableBlockSettingsMenuFirstItem,
 	__unstableUseTypingObserver as useTypingObserver,
 	BlockEditorKeyboardShortcuts,
@@ -22,6 +23,10 @@ import {
 } from '@wordpress/block-editor';
 import { useMergeRefs, useViewportMatch } from '@wordpress/compose';
 import { ReusableBlocksMenuItems } from '@wordpress/reusable-blocks';
+import { listView } from '@wordpress/icons';
+import { ToolbarButton, ToolbarGroup } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { store as interfaceStore } from '@wordpress/interface';
 
 /**
  * Internal dependencies
@@ -65,6 +70,13 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 		templateType
 	);
 	const { setPage } = useDispatch( editSiteStore );
+	const { enableComplementaryArea } = useDispatch( interfaceStore );
+	const openNavigationSidebar = useCallback( () => {
+		enableComplementaryArea(
+			'core/edit-site',
+			'edit-site/navigation-menu'
+		);
+	}, [ enableComplementaryArea ] );
 	const contentRef = useRef();
 	const mergedRefs = useMergeRefs( [ contentRef, useTypingObserver() ] );
 	const isMobileViewport = useViewportMatch( 'small', '<' );
@@ -133,6 +145,16 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 						<BlockInspectorButton onClick={ onClose } />
 					) }
 				</__unstableBlockSettingsMenuFirstItem>
+				<__unstableBlockToolbarListView>
+					<ToolbarGroup>
+						<ToolbarButton
+							className="components-toolbar__control"
+							label={ __( 'Open list view' ) }
+							onClick={ openNavigationSidebar }
+							icon={ listView }
+						/>
+					</ToolbarGroup>
+				</__unstableBlockToolbarListView>
 			</BlockTools>
 			<ReusableBlocksMenuItems />
 		</BlockEditorProvider>

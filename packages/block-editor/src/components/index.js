@@ -98,6 +98,7 @@ export { default as withColorContext } from './color-palette/with-color-context'
  */
 
 export { default as __unstableBlockSettingsMenuFirstItem } from './block-settings-menu/block-settings-menu-first-item';
+export { default as __unstableBlockToolbarListView } from './block-toolbar/block-toolbar-list-view';
 export { default as __unstableInserterMenuExtension } from './inserter-menu-extension';
 export { default as __experimentalPreviewOptions } from './preview-options';
 export { default as __experimentalUseResizeCanvas } from './use-resize-canvas';

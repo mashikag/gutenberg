@@ -43,7 +43,6 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import useListViewModal from './use-list-view-modal';
 import useNavigationMenu from '../use-navigation-menu';
 import useNavigationEntities from '../use-navigation-entities';
 import Placeholder from './placeholder';
@@ -233,10 +232,6 @@ function Navigation( {
 
 	const navRef = useRef();
 	const isDraftNavigationMenu = navigationMenu?.status === 'draft';
-
-	const { listViewToolbarButton, listViewModal } = useListViewModal(
-		clientId
-	);
 
 	const isEntityAvailable =
 		! isNavigationMenuMissing && isNavigationMenuResolved;
@@ -504,9 +499,7 @@ function Navigation( {
 							</ToolbarDropdownMenu>
 						</ToolbarGroup>
 					) }
-					<ToolbarGroup>{ listViewToolbarButton }</ToolbarGroup>
 				</BlockControls>
-				{ listViewModal }
 				<InspectorControls>
 					{ hasSubmenuIndicatorSetting && (
 						<PanelBody title={ __( 'Display' ) }>

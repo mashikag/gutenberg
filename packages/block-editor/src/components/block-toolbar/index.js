@@ -19,6 +19,7 @@ import BlockMover from '../block-mover';
 import BlockParentSelector from '../block-parent-selector';
 import BlockSwitcher from '../block-switcher';
 import BlockControls from '../block-controls';
+import __unstableBlockToolbarListView from './block-toolbar-list-view';
 import BlockSettingsMenu from '../block-settings-menu';
 import { useShowMoversGestures } from './utils';
 import { store as blockEditorStore } from '../../store';
@@ -140,6 +141,9 @@ export default function BlockToolbar( { hideDragHandle } ) {
 						group="other"
 						className="block-editor-block-toolbar__slot"
 					/>
+					{ blockType?.name === 'core/navigation' && (
+						<__unstableBlockToolbarListView.Slot />
+					) }
 				</>
 			) }
 			<BlockSettingsMenu clientIds={ blockClientIds } />
