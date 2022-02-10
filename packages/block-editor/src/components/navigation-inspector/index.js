@@ -63,10 +63,13 @@ export default function __experimentalNavigationInspector() {
 		[ menu, firstNavigationId ]
 	);
 
-	const showSelectControl = navigationIds.length > 1;
+	const isLoading = navigationIds.length > 0 && blocks.length === 0;
+	const showSelectControl = navigationIds.length > 1 && ! isLoading;
+	const hasMenus = navigationIds.length > 0;
+	const showListView = ! isLoading && hasMenus;
 
 	return (
-		<>
+		<div className="block-editor-navigation-inspector">
 			{ showSelectControl && (
 				<SelectControl
 					value={ menu || firstNavigationId }
@@ -83,12 +86,21 @@ export default function __experimentalNavigationInspector() {
 					} ) }
 				</SelectControl>
 			) }
-			<ListView
-				blocks={ blocks }
-				showNestedBlocks
-				__experimentalFeatures
-				__experimentalPersistentListViewFeatures
-			/>
-		</>
+			{ isLoading && (
+				<>
+					<div className="block-editor-navigation-inspector__placeholder" />
+					<div className="block-editor-navigation-inspector__placeholder is-child" />
+					<div className="block-editor-navigation-inspector__placeholder is-child" />
+				</>
+			) }
+			{ showListView && (
+				<ListView
+					blocks={ blocks }
+					showNestedBlocks
+					__experimentalFeatures
+					__experimentalPersistentListViewFeatures
+				/>
+			) }
+		</div>
 	);
 }
