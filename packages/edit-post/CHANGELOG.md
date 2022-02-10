@@ -12,6 +12,10 @@
 
 -   Removed unused `@wordpress/api-fetch`, `@wordpress/primitives` and `uuid` dependencies ([#38388](https://github.com/WordPress/gutenberg/pull/38388)).
 
+### New Features
+
+- Added a new `NavigationMenuSidebar`. [#38600](https://github.com/WordPress/gutenberg/pull/38600)
+
 ## 5.1.0 (2022-01-27)
 
 ## 5.0.0 (2021-07-29)
