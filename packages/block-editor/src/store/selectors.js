@@ -278,7 +278,15 @@ export const getGlobalBlockCount = createSelector(
 	( state ) => [ state.blocks.order, state.blocks.byClientId ]
 );
 
-export const __unstableGetGlobalBlocksByName = createSelector(
+/**
+ * Returns all global blocks that match a blockName. Results include nested blocks.
+ *
+ * @param {Object}  state     Global application state.
+ * @param {?string} blockName Optional block name, if not specified, returns an empty array.
+ *
+ * @return {Array} Array of clientIds of blocks with name equal to blockName.
+ */
+export const __experimentalGetGlobalBlocksByName = createSelector(
 	( state, blockName ) => {
 		if ( ! blockName ) {
 			return EMPTY_ARRAY;

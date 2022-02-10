@@ -23,14 +23,14 @@ export default function NavigationInspector() {
 	} = useSelect( ( select ) => {
 		const {
 			__experimentalGetActiveBlockIdByBlockNames,
-			__unstableGetGlobalBlocksByName,
+			__experimentalGetGlobalBlocksByName,
 			getSelectedBlockClientId,
 			getBlock,
 		} = select( blockEditorStore );
 		const selectedNavId = __experimentalGetActiveBlockIdByBlockNames(
 			'core/navigation'
 		);
-		const navIds = __unstableGetGlobalBlocksByName( 'core/navigation' );
+		const navIds = __experimentalGetGlobalBlocksByName( 'core/navigation' );
 		return {
 			selectedClientId: getSelectedBlockClientId(),
 			selectedNavigationId: selectedNavId,
