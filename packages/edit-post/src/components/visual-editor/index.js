@@ -28,13 +28,21 @@ import {
 	__unstableUseMouseMoveTypingReset as useMouseMoveTypingReset,
 	__unstableIframe as Iframe,
 	__experimentalUseNoRecursiveRenders as useNoRecursiveRenders,
+	__unstableBlockToolbarLastItem,
+	__unstableBlockNameContext,
 } from '@wordpress/block-editor';
-import { useRef, useMemo } from '@wordpress/element';
-import { Button, __unstableMotion as motion } from '@wordpress/components';
+import { useRef, useMemo, useCallback } from '@wordpress/element';
+import {
+	Button,
+	__unstableMotion as motion,
+	ToolbarGroup,
+	ToolbarButton,
+} from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useMergeRefs } from '@wordpress/compose';
-import { arrowLeft } from '@wordpress/icons';
+import { arrowLeft, listView } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
+import { store as interfaceStore } from '@wordpress/interface';
 
 /**
  * Internal dependencies
@@ -187,6 +195,14 @@ export default function VisualEditor( { styles } ) {
 		return undefined;
 	}, [ isTemplateMode, themeSupportsLayout, defaultLayout ] );
 
+	const { enableComplementaryArea } = useDispatch( interfaceStore );
+	const openNavigationSidebar = useCallback( () => {
+		enableComplementaryArea(
+			'core/edit-post',
+			'edit-post/navigation-menu'
+		);
+	}, [ enableComplementaryArea ] );
+
 	return (
 		<BlockTools
 			__unstableContentRef={ ref }
@@ -259,6 +275,22 @@ export default function VisualEditor( { styles } ) {
 					<BlockInspectorButton onClick={ onClose } />
 				) }
 			</__unstableBlockSettingsMenuFirstItem>
+			<__unstableBlockToolbarLastItem>
+				<__unstableBlockNameContext.Consumer>
+					{ ( blockName ) =>
+						blockName === 'core/navigation' && (
+							<ToolbarGroup>
+								<ToolbarButton
+									className="components-toolbar__control"
+									label={ __( 'Open list view' ) }
+									onClick={ openNavigationSidebar }
+									icon={ listView }
+								/>
+							</ToolbarGroup>
+						)
+					}
+				</__unstableBlockNameContext.Consumer>
+			</__unstableBlockToolbarLastItem>
 		</BlockTools>
 	);
 }

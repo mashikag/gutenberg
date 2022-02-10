@@ -15,11 +15,12 @@ import {
 	__experimentalLinkControl,
 	BlockInspector,
 	BlockTools,
-	__unstableBlockToolbarListView,
+	__unstableBlockToolbarLastItem,
 	__unstableBlockSettingsMenuFirstItem,
 	__unstableUseTypingObserver as useTypingObserver,
 	BlockEditorKeyboardShortcuts,
 	store as blockEditorStore,
+	__unstableBlockNameContext,
 } from '@wordpress/block-editor';
 import { useMergeRefs, useViewportMatch } from '@wordpress/compose';
 import { ReusableBlocksMenuItems } from '@wordpress/reusable-blocks';
@@ -145,16 +146,22 @@ export default function BlockEditor( { setIsInserterOpen } ) {
 						<BlockInspectorButton onClick={ onClose } />
 					) }
 				</__unstableBlockSettingsMenuFirstItem>
-				<__unstableBlockToolbarListView>
-					<ToolbarGroup>
-						<ToolbarButton
-							className="components-toolbar__control"
-							label={ __( 'Open list view' ) }
-							onClick={ openNavigationSidebar }
-							icon={ listView }
-						/>
-					</ToolbarGroup>
-				</__unstableBlockToolbarListView>
+				<__unstableBlockToolbarLastItem>
+					<__unstableBlockNameContext.Consumer>
+						{ ( blockName ) =>
+							blockName === 'core/navigation' && (
+								<ToolbarGroup>
+									<ToolbarButton
+										className="components-toolbar__control"
+										label={ __( 'Open list view' ) }
+										onClick={ openNavigationSidebar }
+										icon={ listView }
+									/>
+								</ToolbarGroup>
+							)
+						}
+					</__unstableBlockNameContext.Consumer>
+				</__unstableBlockToolbarLastItem>
 			</BlockTools>
 			<ReusableBlocksMenuItems />
 		</BlockEditorProvider>
