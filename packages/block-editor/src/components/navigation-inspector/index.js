@@ -14,7 +14,7 @@ import ListView from '../list-view';
 
 const EMPTY_BLOCKS = [];
 
-export default function NavigationInspector() {
+export default function __experimentalNavigationInspector() {
 	const {
 		selectedClientId,
 		selectedNavigationId,

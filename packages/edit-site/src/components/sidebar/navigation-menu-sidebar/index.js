@@ -4,7 +4,7 @@
 import { FlexBlock, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { navigation } from '@wordpress/icons';
-import { NavigationInspector } from '@wordpress/block-editor';
+import { __experimentalNavigationInspector as NavigationInspector } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies

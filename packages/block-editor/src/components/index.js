@@ -103,7 +103,7 @@ export { default as __unstableInserterMenuExtension } from './inserter-menu-exte
 export { default as __experimentalPreviewOptions } from './preview-options';
 export { default as __experimentalUseResizeCanvas } from './use-resize-canvas';
 export { default as BlockInspector } from './block-inspector';
-export { default as NavigationInspector } from './navigation-inspector';
+export { default as __experimentalNavigationInspector } from './navigation-inspector';
 export { default as BlockList } from './block-list';
 export { useBlockProps } from './block-list/use-block-props';
 export { LayoutStyle as __experimentalLayoutStyle } from './block-list/layout';
