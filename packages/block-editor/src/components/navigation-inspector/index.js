@@ -75,12 +75,13 @@ export default function __experimentalNavigationInspector() {
 					value={ menu || firstNavigationId }
 					onChange={ setCurrentMenu }
 				>
-					{ navigationIds.map( ( { navigationId, ref } ) => {
+					{ navigationIds.map( ( { navigationId, ref }, index ) => {
 						return (
 							<NavigationOption
 								key={ navigationId }
 								navigationId={ navigationId }
 								postId={ ref }
+								index={ index }
 							/>
 						);
 					} ) }
