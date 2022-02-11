@@ -1,93 +1,89 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
-import { useState, useEffect } from '@wordpress/element';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
+import { __experimentalUseNavigationMenu as useNavigationMenu } from '@wordpress/editor';
 import {
 	__experimentalListView as ListView,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 
-/**
- * Internal dependencies
- */
-import NavigationOption from './navigation-option';
-
 const EMPTY_BLOCKS = [];
 
 export default function NavigationInspector() {
-	const {
-		selectedClientId,
-		selectedNavigationId,
-		firstNavigationId,
-		navigationIds,
-	} = useSelect( ( select ) => {
+	const { selectedNavigationId, clientIdToRef } = useSelect( ( select ) => {
 		const {
 			__experimentalGetActiveBlockIdByBlockNames,
 			__experimentalGetGlobalBlocksByName,
-			getSelectedBlockClientId,
 			getBlock,
 		} = select( blockEditorStore );
 		const selectedNavId = __experimentalGetActiveBlockIdByBlockNames(
 			'core/navigation'
 		);
 		const navIds = __experimentalGetGlobalBlocksByName( 'core/navigation' );
+		const idToRef = {};
+		navIds.forEach( ( id ) => {
+			idToRef[ id ] = getBlock( id )?.attributes?.ref;
+		} );
 		return {
-			selectedClientId: getSelectedBlockClientId(),
-			selectedNavigationId: selectedNavId,
-			firstNavigationId: navIds?.[ 0 ] ?? null,
-			navigationIds: navIds.map( ( navigationId ) => ( {
-				navigationId,
-				ref: getBlock( navigationId )?.attributes?.ref,
-			} ) ),
+			selectedNavigationId: selectedNavId || navIds?.[ 0 ],
+			clientIdToRef: idToRef,
 		};
 	}, [] );
 
 	const [ menu, setCurrentMenu ] = useState(
-		selectedNavigationId || firstNavigationId
+		clientIdToRef[ selectedNavigationId ]
 	);
 
 	useEffect( () => {
 		if ( selectedNavigationId ) {
-			setCurrentMenu( selectedNavigationId );
+			setCurrentMenu( clientIdToRef[ selectedNavigationId ] );
 		}
-	}, [ selectedNavigationId, selectedClientId ] );
+	}, [ selectedNavigationId ] );
 
 	const { blocks } = useSelect(
 		( select ) => {
 			const { __unstableGetClientIdsTree } = select( blockEditorStore );
-			const id = menu || firstNavigationId;
 			return {
-				blocks: id ? __unstableGetClientIdsTree( id ) : EMPTY_BLOCKS,
+				blocks: selectedNavigationId
+					? __unstableGetClientIdsTree( selectedNavigationId )
+					: EMPTY_BLOCKS,
 			};
 		},
-		[ menu, firstNavigationId ]
+		[ selectedNavigationId ]
 	);
 
-	const isLoading = navigationIds.length > 0 && blocks.length === 0;
-	const showSelectControl = navigationIds.length > 1 && ! isLoading;
-	const hasMenus = navigationIds.length > 0;
-	const showListView = ! isLoading && hasMenus;
+	const { navigationMenus, hasResolvedNavigationMenus } = useNavigationMenu();
+	let options = [];
+	if ( navigationMenus ) {
+		options = navigationMenus.map( ( { id, title } ) => ( {
+			value: id,
+			label: title.rendered,
+		} ) );
+	}
+
+	const { updateBlock } = useDispatch( blockEditorStore );
+	const selectMenu = useCallback(
+		( wpNavigationId ) => {
+			setCurrentMenu( wpNavigationId );
+			updateBlock( selectedNavigationId, {
+				attributes: { ref: wpNavigationId },
+			} );
+		},
+		[ selectedNavigationId ]
+	);
+	const isLoading = ! hasResolvedNavigationMenus;
 
 	return (
 		<div className="edit-site-navigation-inspector">
-			{ showSelectControl && (
+			{ ! isLoading && (
 				<SelectControl
-					value={ menu || firstNavigationId }
-					onChange={ setCurrentMenu }
-				>
-					{ navigationIds.map( ( { navigationId, ref }, index ) => {
-						return (
-							<NavigationOption
-								key={ navigationId }
-								navigationId={ navigationId }
-								postId={ ref }
-								index={ index }
-							/>
-						);
-					} ) }
-				</SelectControl>
+					value={ menu }
+					options={ options }
+					onChange={ selectMenu }
+				/>
 			) }
 			{ isLoading && (
 				<>
@@ -96,7 +92,7 @@ export default function NavigationInspector() {
 					<div className="edit-site-navigation-inspector__placeholder is-child" />
 				</>
 			) }
-			{ showListView && (
+			{ ! isLoading && (
 				<ListView
 					blocks={ blocks }
 					showNestedBlocks
