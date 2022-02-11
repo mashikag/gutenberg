@@ -100,6 +100,7 @@ export default function NavigationInspector() {
 				<ListView
 					blocks={ blocks }
 					showNestedBlocks
+					showBlockMovers
 					__experimentalFeatures
 					__experimentalPersistentListViewFeatures
 				/>
