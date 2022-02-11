@@ -12,10 +12,6 @@
 
 -   Removed unused `@wordpress/block-serialization-default-parser`, `css-mediaquery`, `memize` and `redux-multi` dependencies ([#38388](https://github.com/WordPress/gutenberg/pull/38388)).
 
-### New Features
-
-- Added new `__experimentalNavigationInspector` component and `__experimentalGetGlobalBlocksByName` selector. [#38600](https://github.com/WordPress/gutenberg/pull/38600)
-
 ## 8.1.0 (2022-01-27)
 
 ## 8.0.0 (2021-11-07)

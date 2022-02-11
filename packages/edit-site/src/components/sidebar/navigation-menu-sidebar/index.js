@@ -4,12 +4,12 @@
 import { FlexBlock, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { navigation } from '@wordpress/icons';
-import { __experimentalNavigationInspector as NavigationInspector } from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
  */
 import DefaultSidebar from '../default-sidebar';
+import NavigationInspector from './navigation-inspector';
 
 export default function NavigationMenuSidebar() {
 	return (

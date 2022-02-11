@@ -4,17 +4,19 @@
 import { useSelect } from '@wordpress/data';
 import { useState, useEffect } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
+import {
+	__experimentalListView as ListView,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
  */
 import NavigationOption from './navigation-option';
-import { store as blockEditorStore } from '../../store';
-import ListView from '../list-view';
 
 const EMPTY_BLOCKS = [];
 
-export default function __experimentalNavigationInspector() {
+export default function NavigationInspector() {
 	const {
 		selectedClientId,
 		selectedNavigationId,
@@ -69,7 +71,7 @@ export default function __experimentalNavigationInspector() {
 	const showListView = ! isLoading && hasMenus;
 
 	return (
-		<div className="block-editor-navigation-inspector">
+		<div className="edit-site-navigation-inspector">
 			{ showSelectControl && (
 				<SelectControl
 					value={ menu || firstNavigationId }
@@ -89,9 +91,9 @@ export default function __experimentalNavigationInspector() {
 			) }
 			{ isLoading && (
 				<>
-					<div className="block-editor-navigation-inspector__placeholder" />
-					<div className="block-editor-navigation-inspector__placeholder is-child" />
-					<div className="block-editor-navigation-inspector__placeholder is-child" />
+					<div className="edit-site-navigation-inspector__placeholder" />
+					<div className="edit-site-navigation-inspector__placeholder is-child" />
+					<div className="edit-site-navigation-inspector__placeholder is-child" />
 				</>
 			) }
 			{ showListView && (
