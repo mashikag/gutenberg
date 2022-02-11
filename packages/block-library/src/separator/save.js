@@ -22,7 +22,8 @@ export default function separatorSave( { attributes } ) {
 	const className = classnames( {
 		'has-text-color': backgroundColor || customColor,
 		[ colorClass ]: colorClass,
-		'has-default-opacity': opacity === 'default',
+		'has-css-opacity': opacity === 'css',
+		'has-alpha-channel-opacity': opacity === 'alpha-channel',
 	} );
 
 	const styles = {
