@@ -4,21 +4,31 @@
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
-import { __experimentalUseNavigationMenu as useNavigationMenu } from '@wordpress/editor';
+import { store as coreStore } from '@wordpress/core-data';
 import {
 	__experimentalListView as ListView,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 
 const EMPTY_BLOCKS = [];
+const NAVIGATION_MENUS_QUERY = [ { per_page: -1, status: 'publish' } ];
 
 export default function NavigationInspector() {
-	const { selectedNavigationId, clientIdToRef } = useSelect( ( select ) => {
+	const {
+		selectedNavigationId,
+		clientIdToRef,
+		navigationMenus,
+		hasResolvedNavigationMenus,
+	} = useSelect( ( select ) => {
 		const {
 			__experimentalGetActiveBlockIdByBlockNames,
 			__experimentalGetGlobalBlocksByName,
 			getBlock,
 		} = select( blockEditorStore );
+
+		const { getNavigationMenus, hasFinishedResolution } = select(
+			coreStore
+		);
 		const selectedNavId = __experimentalGetActiveBlockIdByBlockNames(
 			'core/navigation'
 		);
@@ -30,6 +40,11 @@ export default function NavigationInspector() {
 		return {
 			selectedNavigationId: selectedNavId || navIds?.[ 0 ],
 			clientIdToRef: idToRef,
+			navigationMenus: getNavigationMenus( NAVIGATION_MENUS_QUERY[ 0 ] ),
+			hasResolvedNavigationMenus: hasFinishedResolution(
+				'getNavigationMenus',
+				NAVIGATION_MENUS_QUERY
+			),
 		};
 	}, [] );
 
@@ -55,7 +70,6 @@ export default function NavigationInspector() {
 		[ selectedNavigationId ]
 	);
 
-	const { navigationMenus, hasResolvedNavigationMenus } = useNavigationMenu();
 	let options = [];
 	if ( navigationMenus ) {
 		options = navigationMenus.map( ( { id, title } ) => ( {

@@ -66,6 +66,5 @@ export { default as WordCount } from './word-count';
 
 // State Related Components
 export { default as EditorProvider } from './provider';
-export { default as __experimentalUseNavigationMenu } from './navigation/use-navigation-menu';
 
 export * from './deprecated';
