@@ -76,11 +76,27 @@ export default function NavigationInspector() {
 		{ id: menu || defaultValue }
 	);
 
-	const isLoading = ! hasResolvedNavigationMenus;
+	const { hasLoadedInnerBlocks } = useSelect(
+		( select ) => {
+			const { hasFinishedResolution } = select( coreStore );
+			return {
+				hasLoadedInnerBlocks: hasFinishedResolution(
+					'getEntityRecord',
+					[ 'postType', 'wp_navigation', menu || defaultValue ]
+				),
+			};
+		},
+		[ menu, defaultValue ]
+	);
+
+	const isLoading = ! ( hasResolvedNavigationMenus && hasLoadedInnerBlocks );
 
 	return (
 		<div className="edit-site-navigation-inspector">
-			{ ! isLoading && (
+			{ ! hasResolvedNavigationMenus && (
+				<div className="edit-site-navigation-inspector__placeholder" />
+			) }
+			{ hasResolvedNavigationMenus && (
 				<SelectControl
 					value={ menu || defaultValue }
 					options={ options }
@@ -89,12 +105,12 @@ export default function NavigationInspector() {
 			) }
 			{ isLoading && (
 				<>
-					<div className="edit-site-navigation-inspector__placeholder" />
+					<div className="edit-site-navigation-inspector__placeholder is-child" />
 					<div className="edit-site-navigation-inspector__placeholder is-child" />
 					<div className="edit-site-navigation-inspector__placeholder is-child" />
 				</>
 			) }
-			{ ! isLoading && innerBlocks && (
+			{ ! isLoading && (
 				<BlockEditorProvider
 					value={ innerBlocks }
 					onChange={ onChange }
