@@ -19,6 +19,7 @@ export default function NavigationInspector() {
 		clientIdToRef,
 		navigationMenus,
 		hasResolvedNavigationMenus,
+		firstNavigationId,
 	} = useSelect( ( select ) => {
 		const {
 			__experimentalGetActiveBlockIdByBlockNames,
@@ -38,7 +39,8 @@ export default function NavigationInspector() {
 			idToRef[ id ] = getBlock( id )?.attributes?.ref;
 		} );
 		return {
-			selectedNavigationId: selectedNavId || navIds?.[ 0 ],
+			selectedNavigationId: selectedNavId,
+			firstNavigationId: navIds?.[ 0 ],
 			clientIdToRef: idToRef,
 			navigationMenus: getNavigationMenus( NAVIGATION_MENUS_QUERY[ 0 ] ),
 			hasResolvedNavigationMenus: hasFinishedResolution(
@@ -48,9 +50,11 @@ export default function NavigationInspector() {
 		};
 	}, [] );
 
-	const [ menu, setCurrentMenu ] = useState(
-		clientIdToRef[ selectedNavigationId ]
-	);
+	const firstNavRefInTemplate = clientIdToRef[ firstNavigationId ];
+	const firstNavRef = navigationMenus?.[ 0 ]?.id;
+	const defaultValue = firstNavRefInTemplate || firstNavRef;
+
+	const [ menu, setCurrentMenu ] = useState( firstNavRefInTemplate );
 
 	useEffect( () => {
 		if ( selectedNavigationId ) {
@@ -69,7 +73,7 @@ export default function NavigationInspector() {
 	const [ innerBlocks, onInput, onChange ] = useEntityBlockEditor(
 		'postType',
 		'wp_navigation',
-		{ id: menu }
+		{ id: menu || defaultValue }
 	);
 
 	const isLoading = ! hasResolvedNavigationMenus;
@@ -78,7 +82,7 @@ export default function NavigationInspector() {
 		<div className="edit-site-navigation-inspector">
 			{ ! isLoading && (
 				<SelectControl
-					value={ menu }
+					value={ menu || defaultValue }
 					options={ options }
 					onChange={ setCurrentMenu }
 				/>
@@ -90,7 +94,7 @@ export default function NavigationInspector() {
 					<div className="edit-site-navigation-inspector__placeholder is-child" />
 				</>
 			) }
-			{ ! isLoading && (
+			{ ! isLoading && innerBlocks && (
 				<BlockEditorProvider
 					value={ innerBlocks }
 					onChange={ onChange }
