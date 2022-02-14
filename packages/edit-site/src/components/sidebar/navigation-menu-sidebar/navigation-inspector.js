@@ -1,16 +1,16 @@
 /**
  * WordPress dependencies
  */
-import { useSelect, useDispatch } from '@wordpress/data';
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
+import { useState, useEffect } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
-import { store as coreStore } from '@wordpress/core-data';
+import { store as coreStore, useEntityBlockEditor } from '@wordpress/core-data';
 import {
 	__experimentalListView as ListView,
 	store as blockEditorStore,
+	BlockEditorProvider,
 } from '@wordpress/block-editor';
 
-const EMPTY_BLOCKS = [];
 const NAVIGATION_MENUS_QUERY = [ { per_page: -1, status: 'publish' } ];
 
 export default function NavigationInspector() {
@@ -58,18 +58,6 @@ export default function NavigationInspector() {
 		}
 	}, [ selectedNavigationId ] );
 
-	const { blocks } = useSelect(
-		( select ) => {
-			const { __unstableGetClientIdsTree } = select( blockEditorStore );
-			return {
-				blocks: selectedNavigationId
-					? __unstableGetClientIdsTree( selectedNavigationId )
-					: EMPTY_BLOCKS,
-			};
-		},
-		[ selectedNavigationId ]
-	);
-
 	let options = [];
 	if ( navigationMenus ) {
 		options = navigationMenus.map( ( { id, title } ) => ( {
@@ -78,16 +66,12 @@ export default function NavigationInspector() {
 		} ) );
 	}
 
-	const { updateBlock } = useDispatch( blockEditorStore );
-	const selectMenu = useCallback(
-		( wpNavigationId ) => {
-			setCurrentMenu( wpNavigationId );
-			updateBlock( selectedNavigationId, {
-				attributes: { ref: wpNavigationId },
-			} );
-		},
-		[ selectedNavigationId ]
+	const [ innerBlocks, onInput, onChange ] = useEntityBlockEditor(
+		'postType',
+		'wp_navigation',
+		{ id: menu }
 	);
+
 	const isLoading = ! hasResolvedNavigationMenus;
 
 	return (
@@ -96,7 +80,7 @@ export default function NavigationInspector() {
 				<SelectControl
 					value={ menu }
 					options={ options }
-					onChange={ selectMenu }
+					onChange={ setCurrentMenu }
 				/>
 			) }
 			{ isLoading && (
@@ -107,13 +91,18 @@ export default function NavigationInspector() {
 				</>
 			) }
 			{ ! isLoading && (
-				<ListView
-					blocks={ blocks }
-					showNestedBlocks
-					showBlockMovers
-					__experimentalFeatures
-					__experimentalPersistentListViewFeatures
-				/>
+				<BlockEditorProvider
+					value={ innerBlocks }
+					onChange={ onChange }
+					onInput={ onInput }
+				>
+					<ListView
+						showNestedBlocks
+						showBlockMovers
+						__experimentalFeatures
+						__experimentalPersistentListViewFeatures
+					/>
+				</BlockEditorProvider>
 			) }
 		</div>
 	);
