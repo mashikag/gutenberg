@@ -6,10 +6,14 @@ import { useState, useEffect } from '@wordpress/element';
 import { SelectControl } from '@wordpress/components';
 import { store as coreStore, useEntityBlockEditor } from '@wordpress/core-data';
 import {
-	__experimentalListView as ListView,
 	store as blockEditorStore,
 	BlockEditorProvider,
 } from '@wordpress/block-editor';
+
+/**
+ * Internal dependencies
+ */
+import NavigationMenu from './navigation-menu';
 
 const NAVIGATION_MENUS_QUERY = [ { per_page: -1, status: 'publish' } ];
 
@@ -116,12 +120,7 @@ export default function NavigationInspector() {
 					onChange={ onChange }
 					onInput={ onInput }
 				>
-					<ListView
-						showNestedBlocks
-						showBlockMovers
-						__experimentalFeatures
-						__experimentalPersistentListViewFeatures
-					/>
+					<NavigationMenu innerBlocks={ innerBlocks } />
 				</BlockEditorProvider>
 			) }
 		</div>
