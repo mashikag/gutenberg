@@ -14,22 +14,20 @@ import { combineReducers } from '@wordpress/data';
  *
  * @return {Object} Updated state.
  */
-export const preferenceDefaults = combineReducers( {
-	features( state = {}, action ) {
-		if ( action.type === 'SET_FEATURE_DEFAULTS' ) {
-			const { scope, defaults } = action;
-			return {
-				...state,
-				[ scope ]: {
-					...state[ scope ],
-					...defaults,
-				},
-			};
-		}
+export function featureDefaults( state = {}, action ) {
+	if ( action.type === 'SET_FEATURE_DEFAULTS' ) {
+		const { scope, defaults } = action;
+		return {
+			...state,
+			[ scope ]: {
+				...state[ scope ],
+				...defaults,
+			},
+		};
+	}
 
-		return state;
-	},
-} );
+	return state;
+}
 
 /**
  * Reducer returning the user preferences.
@@ -39,24 +37,22 @@ export const preferenceDefaults = combineReducers( {
  *
  * @return {Object} Updated state.
  */
-export const preferences = combineReducers( {
-	features( state = {}, action ) {
-		if ( action.type === 'SET_FEATURE_VALUE' ) {
-			const { scope, featureName, value } = action;
-			return {
-				...state,
-				[ scope ]: {
-					...state[ scope ],
-					[ featureName ]: value,
-				},
-			};
-		}
+export function features( state = {}, action ) {
+	if ( action.type === 'SET_FEATURE_VALUE' ) {
+		const { scope, featureName, value } = action;
+		return {
+			...state,
+			[ scope ]: {
+				...state[ scope ],
+				[ featureName ]: value,
+			},
+		};
+	}
 
-		return state;
-	},
-} );
+	return state;
+}
 
 export default combineReducers( {
-	preferenceDefaults,
-	preferences,
+	featureDefaults,
+	features,
 } );

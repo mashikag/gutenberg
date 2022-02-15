@@ -252,8 +252,7 @@ export function migrateFeaturePreferencesToPreferencesStore(
 		: sourceFeatures;
 
 	if ( featuresToMigrate ) {
-		const targetFeatures =
-			state[ preferencesStoreName ]?.preferences?.features;
+		const targetFeatures = state[ preferencesStoreName ]?.features;
 
 		// Avoid migrating features again if they've previously been migrated.
 		if ( ! targetFeatures?.[ sourceStoreName ] ) {
@@ -261,11 +260,9 @@ export function migrateFeaturePreferencesToPreferencesStore(
 			// object is keyed by 'scope', which matches the store name for
 			// the source.
 			persistence.set( preferencesStoreName, {
-				preferences: {
-					features: {
-						...targetFeatures,
-						[ sourceStoreName ]: featuresToMigrate,
-					},
+				features: {
+					...targetFeatures,
+					[ sourceStoreName ]: featuresToMigrate,
 				},
 			} );
 

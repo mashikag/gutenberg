@@ -9,11 +9,11 @@
  * @return {boolean} Is the feature enabled?
  */
 export function isFeatureActive( state, scope, featureName ) {
-	const featureValue = state.preferences.features[ scope ]?.[ featureName ];
+	const featureValue = state.features[ scope ]?.[ featureName ];
 	const defaultedFeatureValue =
 		featureValue !== undefined
 			? featureValue
-			: state.preferenceDefaults.features[ scope ]?.[ featureName ];
+			: state.featureDefaults[ scope ]?.[ featureName ];
 
 	return !! defaultedFeatureValue;
 }

@@ -423,18 +423,16 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				preferences: {
-					features: {
-						'core/test-a': {
-							featureA: true,
-							featureB: false,
-							featureC: true,
-						},
-						'core/test-b': {
-							featureD: true,
-							featureE: false,
-							featureF: true,
-						},
+				features: {
+					'core/test-a': {
+						featureA: true,
+						featureB: false,
+						featureC: true,
+					},
+					'core/test-b': {
+						featureD: true,
+						featureE: false,
+						featureF: true,
 					},
 				},
 			},
@@ -509,18 +507,16 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				preferences: {
-					features: {
-						'core/test-a': {
-							featureG: true,
-							featureH: false,
-							featureI: true,
-						},
-						'core/test-b': {
-							featureJ: true,
-							featureK: false,
-							featureL: true,
-						},
+				features: {
+					'core/test-a': {
+						featureG: true,
+						featureH: false,
+						featureI: true,
+					},
+					'core/test-b': {
+						featureJ: true,
+						featureK: false,
+						featureL: true,
 					},
 				},
 			},
@@ -580,13 +576,11 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				preferences: {
-					features: {
-						'core/test-a': {
-							featureA: true,
-							featureB: false,
-							featureC: true,
-						},
+				features: {
+					'core/test-a': {
+						featureA: true,
+						featureB: false,
+						featureC: true,
 					},
 				},
 			},
@@ -638,13 +632,11 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				preferences: {
-					features: {
-						'core/test-a': {
-							featureG: true,
-							featureH: false,
-							featureI: true,
-						},
+				features: {
+					'core/test-a': {
+						featureG: true,
+						featureH: false,
+						featureI: true,
 					},
 				},
 			},
