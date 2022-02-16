@@ -108,7 +108,7 @@ function NavigationToggle( { icon } ) {
 			>
 				{ buttonIcon }
 			</Button>
-			<PinnedItems.Slot scope="core/edit-site" />
+			<PinnedItems.Slot scope="core/edit-global" />
 		</motion.div>
 	);
 }

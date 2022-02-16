@@ -15,7 +15,8 @@ export default function NavigationMenuSidebar() {
 	return (
 		<DefaultSidebar
 			className="edit-site-navigation-menu-sidebar"
-			identifier="edit-site/navigation-menu"
+			scope="core/edit-global"
+			identifier="edit-global/navigation-menu"
 			title={ __( 'Navigation' ) }
 			icon={ navigation }
 			closeLabel={ __( 'Close navigation menu sidebar' ) }

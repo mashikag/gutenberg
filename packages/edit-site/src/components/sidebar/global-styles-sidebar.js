@@ -20,7 +20,8 @@ export default function GlobalStylesSidebar() {
 	return (
 		<DefaultSidebar
 			className="edit-site-global-styles-sidebar"
-			identifier="edit-site/global-styles"
+			scope="core/edit-global"
+			identifier="edit-global/global-styles"
 			title={ __( 'Styles' ) }
 			icon={ styles }
 			closeLabel={ __( 'Close global styles sidebar' ) }

@@ -8,6 +8,7 @@ import {
 	__experimentalPreviewOptions as PreviewOptions,
 } from '@wordpress/block-editor';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { PinnedItems } from '@wordpress/interface';
 import { _x, __ } from '@wordpress/i18n';
 import { listView, plus } from '@wordpress/icons';
 import { Button, ToolbarItem } from '@wordpress/components';
@@ -176,6 +177,7 @@ export default function Header( {
 						openEntitiesSavedStates={ openEntitiesSavedStates }
 						isEntitiesSavedStatesOpen={ isEntitiesSavedStatesOpen }
 					/>
+					<PinnedItems.Slot scope="core/edit-site" />
 					<MoreMenu />
 				</div>
 			</div>

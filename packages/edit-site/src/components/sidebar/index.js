@@ -62,6 +62,7 @@ export function SidebarComplementaryAreaFills() {
 		<>
 			<DefaultSidebar
 				identifier={ sidebarName }
+				scope={ 'core/edit-site' }
 				title={ __( 'Settings' ) }
 				icon={ cog }
 				closeLabel={ __( 'Close settings sidebar' ) }
@@ -77,8 +78,8 @@ export function SidebarComplementaryAreaFills() {
 					<InspectorSlot bubblesVirtually />
 				) }
 			</DefaultSidebar>
-			<GlobalStylesSidebar />
 			<NavigationMenuSidebar />
+			<GlobalStylesSidebar />
 		</>
 	);
 }
