@@ -5,6 +5,8 @@ import { MenuGroup, MenuItem } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { addQueryArgs } from '@wordpress/url';
+import { useRegistry } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 
 /**
  * Internal dependencies
@@ -12,7 +14,6 @@ import { addQueryArgs } from '@wordpress/url';
 import useNavigationMenu from '../use-navigation-menu';
 import useNavigationEntities from '../use-navigation-entities';
 import useCreateNavigationMenu from './use-create-navigation-menu';
-import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useReducer, useCallback } from '@wordpress/element';
 import menuItemsToBlocks from '../menu-items-to-blocks';
 
@@ -42,26 +43,24 @@ function reducer( state, action ) {
 
 function useConvertClassicToBlockMenu( clientId ) {
 	const createNavigationMenu = useCreateNavigationMenu( clientId );
+	const registry = useRegistry();
 
 	const [ state, dispatch ] = useReducer( reducer, {
 		navMenu: null,
 		isFetching: false,
 	} );
 
-	async function convertClassicMenuToBlockMenu(
-		menuId,
-		menuName,
-		fetchOptions
-	) {
-		const endpoint = 'wp/v2/menu-items';
-
-		const args = { context: 'view', per_page: 100, menus: menuId };
-
+	async function convertClassicMenuToBlockMenu( menuId, menuName ) {
 		// 1. Get the classic Menu items.
-		const classicMenuItems = await apiFetch( {
-			path: addQueryArgs( endpoint, args ),
-			...fetchOptions,
-		} );
+		const menuItemsParameters = {
+			menus: menuId,
+			per_page: -1,
+			context: 'view',
+		};
+
+		const classicMenuItems = await registry
+			.resolveSelect( coreStore )
+			.getMenuItems( menuItemsParameters );
 
 		// 2. Convert the classic items into blocks.
 		const { innerBlocks } = menuItemsToBlocks( classicMenuItems );
@@ -77,40 +76,28 @@ function useConvertClassicToBlockMenu( clientId ) {
 
 	const convert = useCallback(
 		( menuId, menuName ) => {
-			// Only make the request if we have an actual URL
-			// and the fetching util is available. In some editors
-			// there may not be such a util.
-			if ( true ) {
+			if ( ! menuId || ! menuName ) {
 				dispatch( {
-					type: 'LOADING',
+					type: 'ERROR',
 				} );
-
-				const controller = new window.AbortController();
-
-				const signal = controller.signal;
-
-				convertClassicMenuToBlockMenu( menuId, menuName, {
-					signal,
-				} )
-					.then( ( navMenu ) => {
-						dispatch( {
-							type: 'RESOLVED',
-							navMenu,
-						} );
-					} )
-					.catch( () => {
-						// Avoid setting state on unmounted component
-						if ( ! signal.aborted ) {
-							dispatch( {
-								type: 'ERROR',
-							} );
-						}
-					} );
-
-				return () => {
-					controller.abort();
-				};
 			}
+
+			dispatch( {
+				type: 'LOADING',
+			} );
+
+			convertClassicMenuToBlockMenu( menuId, menuName )
+				.then( ( navMenu ) => {
+					dispatch( {
+						type: 'RESOLVED',
+						navMenu,
+					} );
+				} )
+				.catch( () => {
+					dispatch( {
+						type: 'ERROR',
+					} );
+				} );
 		},
 		[ clientId ]
 	);
@@ -153,7 +140,7 @@ export default function NavigationMenuSelector( {
 			! classicMenuConversionState?.isFetching &&
 			classicMenuConversionState.navMenu
 		) {
-			onSelect( classicMenuConversionState.navMenu?.id );
+			onSelect( classicMenuConversionState.navMenu );
 		}
 	}, [ classicMenuConversionState ] );
 
@@ -180,7 +167,7 @@ export default function NavigationMenuSelector( {
 						return (
 							<MenuItem
 								onClick={ () => {
-									onSelect( menu?.id );
+									onSelect( menu );
 								} }
 								key={ menu.id }
 								aria-label={ sprintf( actionLabel, label ) }

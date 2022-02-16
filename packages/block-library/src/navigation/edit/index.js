@@ -491,8 +491,8 @@ function Navigation( {
 								{ ( { onClose } ) => (
 									<NavigationMenuSelector
 										clientId={ clientId }
-										onSelect={ ( navMenuId ) => {
-											setRef( navMenuId );
+										onSelect={ ( { id } ) => {
+											setRef( id );
 											onClose();
 										} }
 										onCreateNew={ startWithEmptyMenu }
@@ -662,6 +662,7 @@ function Navigation( {
 						<PlaceholderComponent
 							onFinish={ ( post ) => {
 								setIsPlaceholderShown( false );
+
 								if ( post ) {
 									setRef( post.id );
 								}
