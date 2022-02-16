@@ -152,6 +152,11 @@ export const toggleFeature = ( feature ) => ( { registry } ) =>
 		.dispatch( preferencesStore )
 		.toggleFeature( 'core/edit-post', feature );
 
+/**
+ * Triggers an action used to switch editor mode.
+ *
+ * @param {string} mode The editor mode.
+ */
 export const switchEditorMode = ( mode ) => ( { dispatch, registry } ) => {
 	dispatch( {
 		type: 'SWITCH_MODE',
