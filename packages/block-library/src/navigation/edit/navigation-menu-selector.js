@@ -11,8 +11,115 @@ import { addQueryArgs } from '@wordpress/url';
  */
 import useNavigationMenu from '../use-navigation-menu';
 import useNavigationEntities from '../use-navigation-entities';
-import useConvertClassicMenu from '../use-convert-classic-menu';
 import useCreateNavigationMenu from './use-create-navigation-menu';
+import apiFetch from '@wordpress/api-fetch';
+import { useEffect, useReducer, useCallback } from '@wordpress/element';
+import menuItemsToBlocks from '../menu-items-to-blocks';
+
+function reducer( state, action ) {
+	switch ( action.type ) {
+		case 'RESOLVED':
+			return {
+				...state,
+				isFetching: false,
+				navMenu: action.navMenu,
+			};
+		case 'ERROR':
+			return {
+				...state,
+				isFetching: false,
+				navMenu: null,
+			};
+		case 'LOADING':
+			return {
+				...state,
+				isFetching: true,
+			};
+		default:
+			throw new Error( `Unexpected action type ${ action.type }` );
+	}
+}
+
+function useConvertClassicToBlockMenu( clientId ) {
+	const createNavigationMenu = useCreateNavigationMenu( clientId );
+
+	const [ state, dispatch ] = useReducer( reducer, {
+		navMenu: null,
+		isFetching: false,
+	} );
+
+	async function convertClassicMenuToBlockMenu(
+		menuId,
+		menuName,
+		fetchOptions
+	) {
+		const endpoint = 'wp/v2/menu-items';
+
+		const args = { context: 'view', per_page: 100, menus: menuId };
+
+		// 1. Get the classic Menu items.
+		const classicMenuItems = await apiFetch( {
+			path: addQueryArgs( endpoint, args ),
+			...fetchOptions,
+		} );
+
+		// 2. Convert the classic items into blocks.
+		const { innerBlocks } = menuItemsToBlocks( classicMenuItems );
+
+		// 3. Create the `wp_navigation` Post with the blocks.
+		const navigationMenu = await createNavigationMenu(
+			menuName,
+			innerBlocks
+		);
+
+		return navigationMenu;
+	}
+
+	const convert = useCallback(
+		( menuId, menuName ) => {
+			// Only make the request if we have an actual URL
+			// and the fetching util is available. In some editors
+			// there may not be such a util.
+			if ( true ) {
+				dispatch( {
+					type: 'LOADING',
+				} );
+
+				const controller = new window.AbortController();
+
+				const signal = controller.signal;
+
+				convertClassicMenuToBlockMenu( menuId, menuName, {
+					signal,
+				} )
+					.then( ( navMenu ) => {
+						dispatch( {
+							type: 'RESOLVED',
+							navMenu,
+						} );
+					} )
+					.catch( () => {
+						// Avoid setting state on unmounted component
+						if ( ! signal.aborted ) {
+							dispatch( {
+								type: 'ERROR',
+							} );
+						}
+					} );
+
+				return () => {
+					controller.abort();
+				};
+			}
+		},
+		[ clientId ]
+	);
+
+	return {
+		convert,
+		state,
+	};
+}
 
 export default function NavigationMenuSelector( {
 	clientId,
@@ -28,6 +135,8 @@ export default function NavigationMenuSelector( {
 
 	const { menus: classicMenus } = useNavigationEntities();
 
+	const { convert, state } = useConvertClassicToBlockMenu( clientId );
+
 	const {
 		navigationMenus,
 		canUserCreateNavigationMenu,
@@ -35,26 +144,11 @@ export default function NavigationMenuSelector( {
 		canSwitchNavigationMenu,
 	} = useNavigationMenu();
 
-	const createNavigationMenu = useCreateNavigationMenu( clientId );
-
-	const onFinishMenuCreation = async (
-		blocks,
-		navigationMenuTitle = null
-	) => {
-		if ( ! canUserCreateNavigationMenu ) {
-			return;
+	useEffect( () => {
+		if ( ! state?.isFetching && state.navMenu ) {
+			onSelect( state.navMenu );
 		}
-
-		const navigationMenu = await createNavigationMenu(
-			navigationMenuTitle,
-			blocks
-		);
-		onSelect( navigationMenu );
-	};
-
-	const convertClassicMenuToBlocks = useConvertClassicMenu(
-		onFinishMenuCreation
-	);
+	}, [ state ] );
 
 	const hasNavigationMenus = !! navigationMenus?.length;
 	const hasClassicMenus = !! classicMenus?.length;
@@ -97,10 +191,7 @@ export default function NavigationMenuSelector( {
 						return (
 							<MenuItem
 								onClick={ () => {
-									convertClassicMenuToBlocks(
-										menu.id,
-										menu.name
-									);
+									convert( menu.id, menu.name );
 								} }
 								key={ menu.id }
 								aria-label={ sprintf(
