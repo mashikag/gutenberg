@@ -8,7 +8,7 @@ import { navigation } from '@wordpress/icons';
 /**
  * Internal dependencies
  */
-import DefaultSidebar from '../default-sidebar';
+import DefaultSidebar from '../../sidebar/default-sidebar';
 import NavigationInspector from './navigation-inspector';
 
 export default function NavigationMenuSidebar() {

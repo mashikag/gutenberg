@@ -9,7 +9,7 @@ import { useDispatch } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import DefaultSidebar from './default-sidebar';
+import DefaultSidebar from '../sidebar/default-sidebar';
 import { GlobalStylesUI, useGlobalStylesReset } from '../global-styles';
 import { store as editSiteStore } from '../../store';
 
