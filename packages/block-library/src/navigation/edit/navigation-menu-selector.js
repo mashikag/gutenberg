@@ -135,7 +135,10 @@ export default function NavigationMenuSelector( {
 
 	const { menus: classicMenus } = useNavigationEntities();
 
-	const { convert, state } = useConvertClassicToBlockMenu( clientId );
+	const {
+		convert,
+		state: classicMenuConversionState,
+	} = useConvertClassicToBlockMenu( clientId );
 
 	const {
 		navigationMenus,
@@ -144,11 +147,15 @@ export default function NavigationMenuSelector( {
 		canSwitchNavigationMenu,
 	} = useNavigationMenu();
 
+	// TODO: lift this up into parent component in order that
 	useEffect( () => {
-		if ( ! state?.isFetching && state.navMenu ) {
-			onSelect( state.navMenu );
+		if (
+			! classicMenuConversionState?.isFetching &&
+			classicMenuConversionState.navMenu
+		) {
+			onSelect( classicMenuConversionState.navMenu?.id );
 		}
-	}, [ state ] );
+	}, [ classicMenuConversionState ] );
 
 	const hasNavigationMenus = !! navigationMenus?.length;
 	const hasClassicMenus = !! classicMenus?.length;
@@ -173,7 +180,7 @@ export default function NavigationMenuSelector( {
 						return (
 							<MenuItem
 								onClick={ () => {
-									onSelect( menu );
+									onSelect( menu?.id );
 								} }
 								key={ menu.id }
 								aria-label={ sprintf( actionLabel, label ) }
