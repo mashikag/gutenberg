@@ -25,7 +25,7 @@ export const store = createReduxStore( STORE_NAME, {
 	reducer,
 	actions,
 	selectors,
-	persist: [ 'enableItems', 'preferences' ],
+	persist: [ 'features' ],
 	__experimentalUseThunks: true,
 } );
 
@@ -35,6 +35,6 @@ registerStore( STORE_NAME, {
 	reducer,
 	actions,
 	selectors,
-	persist: [ 'enableItems', 'preferences' ],
+	persist: [ 'features' ],
 	__experimentalUseThunks: true,
 } );
