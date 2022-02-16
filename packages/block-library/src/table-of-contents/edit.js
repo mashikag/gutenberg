@@ -74,10 +74,6 @@ export default function TableOfContentsEdit( {
 				getClientIdsOfDescendants,
 				getGlobalBlockCount,
 			} = select( blockEditorStore );
-			// FIXME: @wordpress/block-library should not depend on @wordpress/editor.
-			// Blocks can be loaded into a *non-post* block editor.
-			// eslint-disable-next-line @wordpress/data-no-store-string-literals
-			const { getPermalink } = select( 'core/editor' );
 
 			const isPaginated = getGlobalBlockCount( 'core/nextpage' ) !== 0;
 
@@ -92,30 +88,41 @@ export default function TableOfContentsEdit( {
 				);
 			}
 
+			// Disable reason: blocks can be loaded into a *non-post* block editor, so to avoid declaring @wordpress/editor as a dependency, we must access its store by string. When the store is not available, editorSelectors will be null, and the block's saved markup will lack permalinks.
+			// eslint-disable-next-line @wordpress/data-no-store-string-literals
+			const editorSelectors = select( 'core/editor' );
+
+			/** If the core/editor store is available, we can add permalinks to the generated table of contents. This variable will be a link to current post including pagination query if necessary. */
+			const permalink = editorSelectors?.getPermalink() ?? null;
+
+			let headingPageLink = null;
+
+			// If the core/editor store is available, we can add permalinks to the generated table of contents.
+			if ( typeof permalink === 'string' ) {
+				headingPageLink = isPaginated
+					? addQueryArgs( permalink, { page: headingPage } )
+					: permalink;
+			}
+
 			const _latestHeadings = [];
 
-			// The page (of a paginated post) the Table of Contents block will be
-			// part of.
+			/** The page (of a paginated post) the Table of Contents block will be part of. */
 			let tocPage = 1;
 
-			// The page (of a paginated post) a heading will be part of.
+			/** The page (of a paginated post) a heading will be part of. */
 			let headingPage = 1;
-
-			// Link to post including pagination query if necessary.
-			const permalink = getPermalink();
-
-			let headingPageLink = isPaginated
-				? addQueryArgs( permalink, { page: headingPage } )
-				: permalink;
 
 			for ( const [ i, blockClientId ] of allBlockClientIds.entries() ) {
 				const blockName = getBlockName( blockClientId );
 				if ( blockName === 'core/nextpage' ) {
 					headingPage++;
-					headingPageLink = addQueryArgs(
-						removeQueryArgs( permalink, [ 'page' ] ),
-						{ page: headingPage }
-					);
+					if ( typeof permalink === 'string' ) {
+						headingPageLink = addQueryArgs(
+							removeQueryArgs( permalink, [ 'page' ] ),
+							{ page: headingPage }
+						);
+					}
+
 					if ( i < blockIndex ) {
 						tocPage++;
 
@@ -139,14 +146,15 @@ export default function TableOfContentsEdit( {
 							blockClientId
 						);
 
-						const hasAnchor =
+						const canBeLinked =
+							typeof headingPageLink === 'string' &&
 							typeof headingAttributes.anchor === 'string' &&
 							headingAttributes.anchor !== '';
 
 						_latestHeadings.push( {
 							content: headingAttributes.content,
 							level: headingAttributes.level,
-							link: hasAnchor
+							link: canBeLinked
 								? `${ headingPageLink }#${ headingAttributes.anchor }`
 								: null,
 						} );
