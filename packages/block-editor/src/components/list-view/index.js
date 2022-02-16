@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import classnames from 'classnames';
+
+/**
  * WordPress dependencies
  */
 import {
@@ -52,6 +57,7 @@ const expanded = ( state, action ) => {
  * @param {boolean}  props.__experimentalFeatures                   Flag to enable experimental features.
  * @param {boolean}  props.__experimentalPersistentListViewFeatures Flag to enable features for the Persistent List View experiment.
  * @param {boolean}  props.__experimentalHideContainerBlockActions  Flag to hide actions of top level blocks (like core/widget-area)
+ * @param {boolean}  props.__experimentalDarkMode                   Flag to turn on dark mode
  * @param {Object}   ref                                            Forwarded ref
  */
 function ListView(
@@ -61,6 +67,7 @@ function ListView(
 		__experimentalFeatures,
 		__experimentalPersistentListViewFeatures,
 		__experimentalHideContainerBlockActions,
+		__experimentalDarkMode,
 		showNestedBlocks,
 		showBlockMovers,
 		...props
@@ -180,7 +187,9 @@ function ListView(
 				blockDropTarget={ blockDropTarget }
 			/>
 			<TreeGrid
-				className="block-editor-list-view-tree"
+				className={ classnames( 'block-editor-list-view-tree', {
+					'is-dark': __experimentalDarkMode,
+				} ) }
 				aria-label={ __( 'Block navigation structure' ) }
 				ref={ treeGridRef }
 				onCollapseRow={ collapseRow }
