@@ -14,7 +14,13 @@ import { store as coreStore } from '@wordpress/core-data';
 import useNavigationMenu from '../use-navigation-menu';
 import useNavigationEntities from '../use-navigation-entities';
 import useCreateNavigationMenu from './use-create-navigation-menu';
-import { useEffect, useReducer, useCallback } from '@wordpress/element';
+import {
+	useEffect,
+	useReducer,
+	useCallback,
+	useRef,
+	useLayoutEffect,
+} from '@wordpress/element';
 import menuItemsToBlocks from '../menu-items-to-blocks';
 
 function reducer( state, action ) {
@@ -41,6 +47,18 @@ function reducer( state, action ) {
 	}
 }
 
+function useSafeDispatch( dispatch ) {
+	const mounted = useRef( false );
+	useLayoutEffect( () => {
+		mounted.current = true;
+		return () => ( mounted.current = false );
+	}, [] );
+	return useCallback(
+		( ...args ) => ( mounted.current ? dispatch( ...args ) : void 0 ),
+		[ dispatch ]
+	);
+}
+
 function useConvertClassicToBlockMenu( clientId ) {
 	const createNavigationMenu = useCreateNavigationMenu( clientId );
 	const registry = useRegistry();
@@ -49,6 +67,8 @@ function useConvertClassicToBlockMenu( clientId ) {
 		navMenu: null,
 		isFetching: false,
 	} );
+
+	const safeDispatch = useSafeDispatch( dispatch );
 
 	async function convertClassicMenuToBlockMenu( menuId, menuName ) {
 		// 1. Get the classic Menu items.
@@ -77,24 +97,24 @@ function useConvertClassicToBlockMenu( clientId ) {
 	const convert = useCallback(
 		( menuId, menuName ) => {
 			if ( ! menuId || ! menuName ) {
-				dispatch( {
+				safeDispatch( {
 					type: 'ERROR',
 				} );
 			}
 
-			dispatch( {
+			safeDispatch( {
 				type: 'LOADING',
 			} );
 
 			convertClassicMenuToBlockMenu( menuId, menuName )
 				.then( ( navMenu ) => {
-					dispatch( {
+					safeDispatch( {
 						type: 'RESOLVED',
 						navMenu,
 					} );
 				} )
 				.catch( () => {
-					dispatch( {
+					safeDispatch( {
 						type: 'ERROR',
 					} );
 				} );
