@@ -225,7 +225,7 @@ export async function visitSiteEditor( query, skipWelcomeGuide = true ) {
  */
 export async function toggleGlobalStyles() {
 	await page.click(
-		'.edit-site-header__actions button[aria-label="Styles"]'
+		'.interface-interface-skeleton__drawer button[aria-label="Styles"]'
 	);
 }
 
