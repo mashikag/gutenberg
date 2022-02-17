@@ -82,7 +82,6 @@ class WP_Theme_JSON_Gutenberg extends WP_Theme_JSON_5_9 {
 		}
 
 		if ( in_array( 'styles', $types, true ) ) {
-			var_dump('styles');
 			$stylesheet .= $this->get_block_classes( $style_nodes );
 		}
 
