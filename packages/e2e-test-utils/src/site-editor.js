@@ -235,7 +235,7 @@ export async function toggleGlobalStyles() {
  * @param {string} panelName Name of the panel that is going to be opened.
  */
 export async function openGlobalStylesPanel( panelName ) {
-	const selector = `//div[@aria-label="Settings"]//button[.//*[text()="${ panelName }"]]`;
+	const selector = `//div[contains(@class, "edit-site-global-styles-sidebar__panel")]//button[.//*[text()="${ panelName }"]]`;
 	await ( await page.waitForXPath( selector ) ).click();
 }
 
