@@ -89,10 +89,17 @@ export default function NavigationPlaceholder( {
 										} }
 										popoverProps={ { isAlternate: true } }
 									>
-										{ () => (
+										{ ( { onClose } ) => (
 											<NavigationMenuSelector
 												clientId={ clientId }
-												onSelect={ onFinish }
+												onSelect={ ( menu ) => {
+													onClose();
+													onFinish( menu );
+												} }
+												onSelectClassic={ ( menu ) => {
+													onClose();
+													onFinish( menu, true );
+												} }
 											/>
 										) }
 									</DropdownMenu>

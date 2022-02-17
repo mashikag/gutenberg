@@ -11,12 +11,10 @@ import { addQueryArgs } from '@wordpress/url';
  */
 import useNavigationMenu from '../use-navigation-menu';
 import useNavigationEntities from '../use-navigation-entities';
-import { useEffect } from '@wordpress/element';
-import useConvertClassicToBlockMenu from './use-convert-classic-menu-to-block-menu';
 
 export default function NavigationMenuSelector( {
-	clientId,
 	onSelect,
+	onSelectClassic,
 	onCreateNew,
 	showManageActions = false,
 	actionLabel,
@@ -29,26 +27,11 @@ export default function NavigationMenuSelector( {
 	const { menus: classicMenus } = useNavigationEntities();
 
 	const {
-		convert,
-		state: classicMenuConversionState,
-	} = useConvertClassicToBlockMenu( clientId );
-
-	const {
 		navigationMenus,
 		canUserCreateNavigationMenu,
 		canUserUpdateNavigationMenu,
 		canSwitchNavigationMenu,
 	} = useNavigationMenu();
-
-	// TODO: lift this up into parent component in order that
-	useEffect( () => {
-		if (
-			! classicMenuConversionState?.isFetching &&
-			classicMenuConversionState.navMenu
-		) {
-			onSelect( classicMenuConversionState.navMenu );
-		}
-	}, [ classicMenuConversionState ] );
 
 	const hasNavigationMenus = !! navigationMenus?.length;
 	const hasClassicMenus = !! classicMenus?.length;
@@ -91,7 +74,7 @@ export default function NavigationMenuSelector( {
 						return (
 							<MenuItem
 								onClick={ () => {
-									convert( menu.id, menu.name );
+									onSelectClassic( menu );
 								} }
 								key={ menu.id }
 								aria-label={ sprintf(

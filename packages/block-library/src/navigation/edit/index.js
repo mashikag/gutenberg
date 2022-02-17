@@ -56,6 +56,7 @@ import UnsavedInnerBlocks from './unsaved-inner-blocks';
 import NavigationMenuDeleteControl from './navigation-menu-delete-control';
 import useNavigationNotice from './use-navigation-notice';
 import OverlayMenuIcon from './overlay-menu-icon';
+import useConvertClassicToBlockMenu from './use-convert-classic-menu-to-block-menu';
 
 const EMPTY_ARRAY = [];
 
@@ -302,6 +303,11 @@ function Navigation( {
 	] = useState();
 	const [ detectedOverlayColor, setDetectedOverlayColor ] = useState();
 
+	const {
+		convert,
+		state: classicMenuConversionState,
+	} = useConvertClassicToBlockMenu( clientId );
+
 	// Spacer block needs orientation from context. This is a patch until
 	// https://github.com/WordPress/gutenberg/issues/36197 is addressed.
 	useEffect( () => {
@@ -384,6 +390,15 @@ function Navigation( {
 		hasResolvedCanUserCreateNavigationMenu,
 		ref,
 	] );
+
+	useEffect( () => {
+		if (
+			! classicMenuConversionState?.isFetching &&
+			classicMenuConversionState.navMenu
+		) {
+			setRef( classicMenuConversionState.navMenu?.id );
+		}
+	}, [ classicMenuConversionState ] );
 
 	const startWithEmptyMenu = useCallback( () => {
 		registry.batch( () => {
@@ -494,6 +509,13 @@ function Navigation( {
 										onSelect={ ( { id } ) => {
 											setRef( id );
 											onClose();
+										} }
+										onSelectClassic={ ( classicMenu ) => {
+											onClose();
+											convert(
+												classicMenu.id,
+												classicMenu.name
+											);
 										} }
 										onCreateNew={ startWithEmptyMenu }
 										/* translators: %s: The name of a menu. */
@@ -660,13 +682,16 @@ function Navigation( {
 				<nav { ...blockProps }>
 					{ isPlaceholderShown && (
 						<PlaceholderComponent
-							onFinish={ ( post ) => {
+							onFinish={ ( post, requiresConversion = false ) => {
 								setIsPlaceholderShown( false );
 
-								if ( post ) {
-									setRef( post.id );
+								if ( requiresConversion ) {
+									convert( post.id, post.name );
 								}
-								selectBlock( clientId );
+								if ( ! requiresConversion && post ) {
+									setRef( post.id );
+									selectBlock( clientId );
+								}
 							} }
 							canSwitchNavigationMenu={ canSwitchNavigationMenu }
 							hasResolvedNavigationMenus={
