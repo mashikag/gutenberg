@@ -492,6 +492,11 @@ function Navigation( {
 		{ open: overlayMenuPreview }
 	);
 
+	const isLoading =
+		! hasResolvedCanUserCreateNavigationMenu ||
+		classicMenuConversionState?.isFetching ||
+		( ! isEntityAvailable && ! isPlaceholderShown );
+
 	return (
 		<EntityProvider kind="postType" type="wp_navigation" id={ ref }>
 			<RecursionProvider>
@@ -703,10 +708,7 @@ function Navigation( {
 							}
 						/>
 					) }
-					{ ! hasResolvedCanUserCreateNavigationMenu ||
-						( ! isEntityAvailable && ! isPlaceholderShown && (
-							<PlaceholderPreview isLoading />
-						) ) }
+					{ isLoading && <PlaceholderPreview isLoading /> }
 					{ ! isPlaceholderShown && (
 						<ResponsiveWrapper
 							id={ clientId }
