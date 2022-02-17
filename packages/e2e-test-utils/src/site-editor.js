@@ -244,6 +244,6 @@ export async function openGlobalStylesPanel( panelName ) {
  */
 export async function openPreviousGlobalStylesPanel() {
 	await page.click(
-		'div[aria-label="Settings"] button[aria-label="Navigate to the previous view"]'
+		'.edit-site-global-styles-sidebar__panel button[aria-label="Navigate to the previous view"]'
 	);
 }
