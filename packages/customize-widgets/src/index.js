@@ -44,7 +44,7 @@ const ENABLE_EXPERIMENTAL_FSE_BLOCKS = false;
  * @param {Object} blockEditorSettings Block editor settings.
  */
 export function initialize( editorName, blockEditorSettings ) {
-	dispatch( preferencesStore ).setFeatureDefaults( 'core/customize-widgets', {
+	dispatch( preferencesStore ).setDefaults( 'core/customize-widgets', {
 		fixedToolbar: false,
 		welcomeGuide: true,
 	} );

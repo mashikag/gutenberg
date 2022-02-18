@@ -1,7 +1,6 @@
 /**
  * WordPress dependencies
  */
-import { controls } from '@wordpress/data';
 import deprecated from '@wordpress/deprecated';
 import { store as preferencesStore } from '@wordpress/preferences';
 
@@ -96,18 +95,15 @@ export function unpinItem( scope, itemId ) {
  * @param {string} scope       The feature scope (e.g. core/edit-post).
  * @param {string} featureName The feature name.
  */
-export function* toggleFeature( scope, featureName ) {
+export function toggleFeature( scope, featureName ) {
 	deprecated( `dispatch( 'core/interface' ).toggleFeature`, {
 		since: '6.0',
-		alternative: `dispatch( 'core/preferences' ).toggleFeature`,
+		alternative: `dispatch( 'core/preferences' ).toggle`,
 	} );
 
-	yield controls.dispatch(
-		preferencesStore.name,
-		'toggleFeature',
-		scope,
-		featureName
-	);
+	return function ( { registry } ) {
+		registry.dispatch( preferencesStore ).toggle( scope, featureName );
+	};
 }
 
 /**
@@ -120,19 +116,17 @@ export function* toggleFeature( scope, featureName ) {
  *
  * @return {Object} Action object.
  */
-export function* setFeatureValue( scope, featureName, value ) {
+export function setFeatureValue( scope, featureName, value ) {
 	deprecated( `dispatch( 'core/interface' ).setFeatureValue`, {
 		since: '6.0',
-		alternative: `dispatch( 'core/preferences' ).setFeatureValue`,
+		alternative: `dispatch( 'core/preferences' ).set`,
 	} );
 
-	yield controls.dispatch(
-		preferencesStore.name,
-		'setFeatureValue',
-		scope,
-		featureName,
-		value
-	);
+	return function ( { registry } ) {
+		registry
+			.dispatch( preferencesStore )
+			.set( scope, featureName, !! value );
+	};
 }
 
 /**
@@ -146,13 +140,10 @@ export function* setFeatureValue( scope, featureName, value ) {
 export function* setFeatureDefaults( scope, defaults ) {
 	deprecated( `dispatch( 'core/interface' ).setFeatureDefaults`, {
 		since: '6.0',
-		alternative: `dispatch( 'core/preferences' ).setFeatureDefaults`,
+		alternative: `dispatch( 'core/preferences' ).setDefaults`,
 	} );
 
-	yield controls.dispatch(
-		preferencesStore.name,
-		'setFeatureDefaults',
-		scope,
-		defaults
-	);
+	return function ( { registry } ) {
+		registry.dispatch( preferencesStore ).setDefaults( scope, defaults );
+	};
 }

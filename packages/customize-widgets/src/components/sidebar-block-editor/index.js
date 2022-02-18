@@ -48,21 +48,21 @@ export default function SidebarBlockEditor( {
 		keepCaretInsideBlock,
 		isWelcomeGuideActive,
 	} = useSelect( ( select ) => {
-		const { isFeatureActive } = select( preferencesStore );
+		const { get } = select( preferencesStore );
 		return {
 			hasUploadPermissions: defaultTo(
 				select( coreStore ).canUser( 'create', 'media' ),
 				true
 			),
-			isFixedToolbarActive: isFeatureActive(
+			isFixedToolbarActive: !! get(
 				'core/customize-widgets',
 				'fixedToolbar'
 			),
-			keepCaretInsideBlock: isFeatureActive(
+			keepCaretInsideBlock: !! get(
 				'core/customize-widgets',
 				'keepCaretInsideBlock'
 			),
-			isWelcomeGuideActive: isFeatureActive(
+			isWelcomeGuideActive: !! get(
 				'core/customize-widgets',
 				'welcomeGuide'
 			),

@@ -78,7 +78,7 @@ export function initialize( id, settings ) {
 		);
 	} );
 
-	dispatch( preferencesStore ).setFeatureDefaults( 'core/edit-widgets', {
+	dispatch( preferencesStore ).setDefaults( 'core/edit-widgets', {
 		fixedToolbar: false,
 		welcomeGuide: true,
 		showBlockBreadcrumbs: true,

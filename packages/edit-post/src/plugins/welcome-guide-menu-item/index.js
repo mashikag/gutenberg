@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
-import { MoreMenuFeatureToggle } from '@wordpress/preferences';
+import { MoreMenuPreferenceToggle } from '@wordpress/preferences';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -17,9 +17,9 @@ export default function WelcomeGuideMenuItem() {
 	);
 
 	return (
-		<MoreMenuFeatureToggle
+		<MoreMenuPreferenceToggle
 			scope="core/edit-post"
-			feature={ isTemplateMode ? 'welcomeGuideTemplate' : 'welcomeGuide' }
+			name={ isTemplateMode ? 'welcomeGuideTemplate' : 'welcomeGuide' }
 			label={ __( 'Welcome Guide' ) }
 		/>
 	);

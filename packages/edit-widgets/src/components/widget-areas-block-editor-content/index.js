@@ -24,7 +24,7 @@ export default function WidgetAreasBlockEditorContent( {
 } ) {
 	const hasThemeStyles = useSelect(
 		( select ) =>
-			select( preferencesStore ).isFeatureActive(
+			!! select( preferencesStore ).get(
 				'core/edit-widgets',
 				'themeStyles'
 			),

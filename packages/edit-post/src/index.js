@@ -106,7 +106,7 @@ export function initializeEditor(
 		initialEdits
 	);
 
-	dispatch( preferencesStore ).setFeatureDefaults( 'core/edit-post', {
+	dispatch( preferencesStore ).setDefaults( 'core/edit-post', {
 		fixedToolbar: false,
 		welcomeGuide: true,
 		fullscreenMode: true,

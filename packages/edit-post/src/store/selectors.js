@@ -192,10 +192,7 @@ export function isModalActive( state, modalName ) {
  */
 export const isFeatureActive = createRegistrySelector(
 	( select ) => ( state, feature ) => {
-		return select( preferencesStore ).isFeatureActive(
-			'core/edit-post',
-			feature
-		);
+		return !! select( preferencesStore ).get( 'core/edit-post', feature );
 	}
 );
 

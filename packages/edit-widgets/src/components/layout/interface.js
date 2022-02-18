@@ -55,9 +55,10 @@ function Interface( { blockEditorSettings } ) {
 			).getActiveComplementaryArea( editWidgetsStore.name ),
 			isInserterOpened: !! select( editWidgetsStore ).isInserterOpened(),
 			isListViewOpened: !! select( editWidgetsStore ).isListViewOpened(),
-			hasBlockBreadCrumbsEnabled: select(
-				preferencesStore
-			).isFeatureActive( 'core/edit-widgets', 'showBlockBreadcrumbs' ),
+			hasBlockBreadCrumbsEnabled: !! select( preferencesStore ).get(
+				'core/edit-widgets',
+				'showBlockBreadcrumbs'
+			),
 			previousShortcut: select(
 				keyboardShortcutsStore
 			).getAllShortcutKeyCombinations(

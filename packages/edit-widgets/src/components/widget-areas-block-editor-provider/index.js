@@ -50,11 +50,11 @@ export default function WidgetAreasBlockEditorProvider( {
 			reusableBlocks: ALLOW_REUSABLE_BLOCKS
 				? select( coreStore ).getEntityRecords( 'postType', 'wp_block' )
 				: [],
-			isFixedToolbarActive: select( preferencesStore ).isFeatureActive(
+			isFixedToolbarActive: !! select( preferencesStore ).get(
 				'core/edit-widgets',
 				'fixedToolbar'
 			),
-			keepCaretInsideBlock: select( preferencesStore ).isFeatureActive(
+			keepCaretInsideBlock: !! select( preferencesStore ).get(
 				'core/edit-widgets',
 				'keepCaretInsideBlock'
 			),

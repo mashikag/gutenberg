@@ -148,9 +148,7 @@ export function removeEditorPanel( panelName ) {
  * @param {string} feature Feature name.
  */
 export const toggleFeature = ( feature ) => ( { registry } ) =>
-	registry
-		.dispatch( preferencesStore )
-		.toggleFeature( 'core/edit-post', feature );
+	registry.dispatch( preferencesStore ).toggle( 'core/edit-post', feature );
 
 /**
  * Triggers an action used to switch editor mode.

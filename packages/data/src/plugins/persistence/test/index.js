@@ -423,7 +423,7 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				features: {
+				preferences: {
 					'core/test-a': {
 						featureA: true,
 						featureB: false,
@@ -507,7 +507,7 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				features: {
+				preferences: {
 					'core/test-a': {
 						featureG: true,
 						featureH: false,
@@ -576,7 +576,7 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				features: {
+				preferences: {
 					'core/test-a': {
 						featureA: true,
 						featureB: false,
@@ -632,7 +632,7 @@ describe( 'migrateFeaturePreferencesToPreferencesStore', () => {
 
 		expect( persistenceInterface.get() ).toEqual( {
 			'core/preferences': {
-				features: {
+				preferences: {
 					'core/test-a': {
 						featureG: true,
 						featureH: false,

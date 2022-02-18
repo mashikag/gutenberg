@@ -56,14 +56,14 @@ describe( 'actions', () => {
 		expect(
 			registry
 				.select( preferencesStore )
-				.isFeatureActive( editPostStore.name, 'welcomeGuide' )
+				.get( editPostStore.name, 'welcomeGuide' )
 		).toBe( true );
 
 		registry.dispatch( editPostStore ).toggleFeature( 'welcomeGuide' );
 		expect(
 			registry
 				.select( preferencesStore )
-				.isFeatureActive( editPostStore.name, 'welcomeGuide' )
+				.get( editPostStore.name, 'welcomeGuide' )
 		).toBe( false );
 	} );
 	describe( 'switchEditorMode', () => {

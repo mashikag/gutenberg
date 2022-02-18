@@ -83,9 +83,9 @@ export const isFeatureActive = createRegistrySelector(
 	( select ) => ( state, scope, featureName ) => {
 		deprecated( `select( 'core/interface' ).isFeatureActive`, {
 			since: '6.0',
-			alternative: `select( 'core/preferences' ).isFeatureActive`,
+			alternative: `select( 'core/preferences' ).get`,
 		} );
 
-		return select( preferencesStore ).isFeatureActive( scope, featureName );
+		return !! select( preferencesStore ).get( scope, featureName );
 	}
 );

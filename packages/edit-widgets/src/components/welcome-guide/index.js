@@ -15,14 +15,14 @@ import { store as editWidgetsStore } from '../../store';
 export default function WelcomeGuide() {
 	const isActive = useSelect(
 		( select ) =>
-			select( preferencesStore ).isFeatureActive(
+			!! select( preferencesStore ).get(
 				'core/edit-widgets',
 				'welcomeGuide'
 			),
 		[]
 	);
 
-	const { toggleFeature } = useDispatch( preferencesStore );
+	const { toggle } = useDispatch( preferencesStore );
 
 	const widgetAreas = useSelect(
 		( select ) =>
@@ -52,9 +52,7 @@ export default function WelcomeGuide() {
 			className="edit-widgets-welcome-guide"
 			contentLabel={ __( 'Welcome to block Widgets' ) }
 			finishButtonText={ __( 'Get started' ) }
-			onFinish={ () =>
-				toggleFeature( 'core/edit-widgets', 'welcomeGuide' )
-			}
+			onFinish={ () => toggle( 'core/edit-widgets', 'welcomeGuide' ) }
 			pages={ [
 				{
 					image: (
