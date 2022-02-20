@@ -33,7 +33,7 @@ function InputField(
 	{
 		disabled = false,
 		dragDirection = 'n',
-		dragThreshold = 10,
+		dragThreshold,
 		id,
 		isDragEnabled = false,
 		isFocused,
@@ -191,6 +191,7 @@ function InputField(
 			}
 		},
 		{
+			axis: dragDirection === 'e' || dragDirection === 'w' ? 'x' : 'y',
 			threshold: dragThreshold,
 			enabled: isDragEnabled,
 			pointer: { capture: false },
