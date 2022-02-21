@@ -5,6 +5,7 @@
 ### Bug Fix
 
 -   Fix spin buttons of number inputs in Safari ([#38840](https://github.com/WordPress/gutenberg/pull/38840))
+-   Normalize `font-family` on `Button`, `ColorPalette`, `ComoboboxControl`, `DateTimePicker`, `FormTokenField`, `InputControl`, `SelectControl`, and `ToggleGroupControl`. ([#38969](https://github.com/WordPress/gutenberg/pull/38969))
 
 ## 19.4.0 (2022-02-10)
 
