@@ -33,7 +33,7 @@ function gutenberg_render_elements_support( $block_content, $block ) {
 		return $block_content;
 	}
 
-	$class_name = 'wp-elements-' . uniqid();
+	$class_name = wp_unique_id( 'wp-elements-' );
 
 	if ( strpos( $link_color, 'var:preset|color|' ) !== false ) {
 		// Get the name from the string and add proper styles.
@@ -65,7 +65,7 @@ function gutenberg_render_elements_support( $block_content, $block ) {
 		$content              = substr_replace( $block_content, ' class="' . $class_name . '"', $first_element_offset + strlen( $first_element ) - 1, 0 );
 	}
 
-	gutenberg_enqueue_block_support( $style );
+	gutenberg_enqueue_block_support_styles( $style );
 
 	return $content;
 }
