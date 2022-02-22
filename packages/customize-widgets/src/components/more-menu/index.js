@@ -13,7 +13,7 @@ import { external } from '@wordpress/icons';
 import { displayShortcut } from '@wordpress/keycodes';
 import { useShortcut } from '@wordpress/keyboard-shortcuts';
 import { MoreMenuDropdown } from '@wordpress/interface';
-import { MoreMenuPreferenceToggle } from '@wordpress/preferences';
+import { PreferenceToggleMenuItem } from '@wordpress/preferences';
 
 /**
  * Internal dependencies
@@ -47,7 +47,7 @@ export default function MoreMenu() {
 				{ () => (
 					<>
 						<MenuGroup label={ _x( 'View', 'noun' ) }>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/customize-widgets"
 								name="fixedToolbar"
 								label={ __( 'Top toolbar' ) }
@@ -71,7 +71,7 @@ export default function MoreMenu() {
 							>
 								{ __( 'Keyboard shortcuts' ) }
 							</MenuItem>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/customize-widgets"
 								name="welcomeGuide"
 								label={ __( 'Welcome Guide' ) }
@@ -95,7 +95,7 @@ export default function MoreMenu() {
 							</MenuItem>
 						</MenuGroup>
 						<MenuGroup label={ __( 'Preferences' ) }>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/customize-widgets"
 								name="keepCaretInsideBlock"
 								label={ __(

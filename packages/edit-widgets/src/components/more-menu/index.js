@@ -6,7 +6,7 @@ import { useState } from '@wordpress/element';
 import { __, _x } from '@wordpress/i18n';
 import { external } from '@wordpress/icons';
 import { MoreMenuDropdown } from '@wordpress/interface';
-import { MoreMenuPreferenceToggle } from '@wordpress/preferences';
+import { PreferenceToggleMenuItem } from '@wordpress/preferences';
 import { displayShortcut } from '@wordpress/keycodes';
 import { useShortcut } from '@wordpress/keyboard-shortcuts';
 import { useViewportMatch } from '@wordpress/compose';
@@ -39,7 +39,7 @@ export default function MoreMenu() {
 					<>
 						{ isLargeViewport && (
 							<MenuGroup label={ _x( 'View', 'noun' ) }>
-								<MoreMenuPreferenceToggle
+								<PreferenceToggleMenuItem
 									scope="core/edit-widgets"
 									name="fixedToolbar"
 									label={ __( 'Top toolbar' ) }
@@ -64,7 +64,7 @@ export default function MoreMenu() {
 							>
 								{ __( 'Keyboard shortcuts' ) }
 							</MenuItem>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/edit-widgets"
 								name="welcomeGuide"
 								label={ __( 'Welcome Guide' ) }
@@ -91,7 +91,7 @@ export default function MoreMenu() {
 							/>
 						</MenuGroup>
 						<MenuGroup label={ __( 'Preferences' ) }>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/edit-widgets"
 								name="keepCaretInsideBlock"
 								label={ __(
@@ -107,7 +107,7 @@ export default function MoreMenu() {
 									'Contain text cursor inside block deactivated'
 								) }
 							/>
-							<MoreMenuPreferenceToggle
+							<PreferenceToggleMenuItem
 								scope="core/edit-widgets"
 								name="themeStyles"
 								info={ __(
@@ -116,7 +116,7 @@ export default function MoreMenu() {
 								label={ __( 'Use theme styles' ) }
 							/>
 							{ isLargeViewport && (
-								<MoreMenuPreferenceToggle
+								<PreferenceToggleMenuItem
 									scope="core/edit-widgets"
 									name="showBlockBreadcrumbs"
 									label={ __( 'Display block breadcrumbs' ) }

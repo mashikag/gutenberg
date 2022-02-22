@@ -5,7 +5,7 @@ import { MenuGroup } from '@wordpress/components';
 import { __, _x } from '@wordpress/i18n';
 import { useViewportMatch } from '@wordpress/compose';
 import { displayShortcut } from '@wordpress/keycodes';
-import { MoreMenuPreferenceToggle } from '@wordpress/preferences';
+import { PreferenceToggleMenuItem } from '@wordpress/preferences';
 
 function WritingMenu() {
 	const isLargeViewport = useViewportMatch( 'medium' );
@@ -15,7 +15,7 @@ function WritingMenu() {
 
 	return (
 		<MenuGroup label={ _x( 'View', 'noun' ) }>
-			<MoreMenuPreferenceToggle
+			<PreferenceToggleMenuItem
 				scope="core/edit-post"
 				name="fixedToolbar"
 				label={ __( 'Top toolbar' ) }
@@ -25,7 +25,7 @@ function WritingMenu() {
 				messageActivated={ __( 'Top toolbar activated' ) }
 				messageDeactivated={ __( 'Top toolbar deactivated' ) }
 			/>
-			<MoreMenuPreferenceToggle
+			<PreferenceToggleMenuItem
 				scope="core/edit-post"
 				name="focusMode"
 				label={ __( 'Spotlight mode' ) }
@@ -33,7 +33,7 @@ function WritingMenu() {
 				messageActivated={ __( 'Spotlight mode activated' ) }
 				messageDeactivated={ __( 'Spotlight mode deactivated' ) }
 			/>
-			<MoreMenuPreferenceToggle
+			<PreferenceToggleMenuItem
 				scope="core/edit-post"
 				name="fullscreenMode"
 				label={ __( 'Fullscreen mode' ) }
