@@ -22,7 +22,7 @@ export default function MoreMenuDropdown( {
 	return (
 		<DropdownComponent
 			className={ classnames(
-				'preferences-more-menu-dropdown',
+				'interface-more-menu-dropdown',
 				className
 			) }
 			icon={ moreVertical }
@@ -31,7 +31,7 @@ export default function MoreMenuDropdown( {
 				position: 'bottom left',
 				...popoverProps,
 				className: classnames(
-					'preferences-more-menu-dropdown__content',
+					'interface-more-menu-dropdown__content',
 					popoverProps?.className
 				),
 			} }

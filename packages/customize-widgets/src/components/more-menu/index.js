@@ -12,10 +12,8 @@ import { __, _x } from '@wordpress/i18n';
 import { external } from '@wordpress/icons';
 import { displayShortcut } from '@wordpress/keycodes';
 import { useShortcut } from '@wordpress/keyboard-shortcuts';
-import {
-	MoreMenuDropdown,
-	MoreMenuPreferenceToggle,
-} from '@wordpress/preferences';
+import { MoreMenuDropdown } from '@wordpress/interface';
+import { MoreMenuPreferenceToggle } from '@wordpress/preferences';
 
 /**
  * Internal dependencies

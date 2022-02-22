@@ -3,9 +3,12 @@
  */
 import { __ } from '@wordpress/i18n';
 import { MenuGroup } from '@wordpress/components';
-import { ActionItem, PinnedItems } from '@wordpress/interface';
+import {
+	MoreMenuDropdown,
+	ActionItem,
+	PinnedItems,
+} from '@wordpress/interface';
 import { useViewportMatch } from '@wordpress/compose';
-import { MoreMenuDropdown } from '@wordpress/preferences';
 
 /**
  * Internal dependencies
