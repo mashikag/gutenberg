@@ -63,7 +63,6 @@ class WP_Webfonts {
 		}
 
 		add_filter( 'pre_render_block', array( $this, 'register_used_font_family_from_block' ), 10, 2 );
-		add_filter( 'gutenberg_filter_unused_fonts', array( $this, 'remove_unused_fonts' ) );
 
 		add_action( $hook, array( $this, 'generate_and_enqueue_styles' ) );
 
@@ -124,7 +123,9 @@ class WP_Webfonts {
 		}
 	}
 
-	public function remove_unused_fonts( $registered_webfonts ) {
+	public function filter_unused_fonts() {
+		$registered_webfonts = $this->get_fonts();
+
 		$this->register_used_font_families_from_global_styles();
 
 		foreach ( $registered_webfonts as $id => $webfont ) {
@@ -135,7 +136,7 @@ class WP_Webfonts {
 			}
 		}
 
-		return $registered_webfonts;
+		self::$webfonts = $registered_webfonts;
 	}
 
 	/**
@@ -283,7 +284,7 @@ class WP_Webfonts {
 	 * Generate and enqueue webfonts styles.
 	 */
 	public function generate_and_enqueue_styles() {
-		self::$webfonts = apply_filters( 'gutenberg_filter_unused_fonts', $this->get_fonts() );
+		$this->filter_unused_fonts();
 
 		// Generate the styles.
 		$styles = $this->generate_styles();
