@@ -14,6 +14,7 @@ import { Icon, positionCenter, stretchWide } from '@wordpress/icons';
  */
 import useSetting from '../components/use-setting';
 import { appendSelectors } from './utils';
+import { shouldSkipSerialization } from '../hooks/style';
 
 export default {
 	name: 'default',
@@ -105,12 +106,22 @@ export default {
 	toolBarControls: function DefaultLayoutToolbarControls() {
 		return null;
 	},
-	save: function DefaultLayoutStyle( { selector, layout = {}, style } ) {
+	save: function DefaultLayoutStyle( {
+		selector,
+		layout = {},
+		style,
+		blockName,
+	} ) {
 		const { contentSize, wideSize } = layout;
 		const blockGapSupport = useSetting( 'spacing.blockGap' );
 		const hasBlockGapStylesSupport = blockGapSupport !== null;
+		// If a block's block.json skips serialization for spacing or spacing.blockGap,
+		// don't apply the user-defined value to the styles.
 		const blockGapValue =
-			style?.spacing?.blockGap ?? 'var( --wp--style--block-gap )';
+			style?.spacing?.blockGap &&
+			! shouldSkipSerialization( blockName, 'spacing', 'blockGap' )
+				? style?.spacing?.blockGap
+				: 'var( --wp--style--block-gap )';
 
 		let output =
 			!! contentSize || !! wideSize

@@ -18,6 +18,7 @@ import { Button, ToggleControl, Flex, FlexItem } from '@wordpress/components';
 import { appendSelectors } from './utils';
 import useSetting from '../components/use-setting';
 import { BlockControls, JustifyContentControl } from '../components';
+import { shouldSkipSerialization } from '../hooks/style';
 
 // Used with the default, horizontal flex orientation.
 const justifyContentMap = {
@@ -84,12 +85,17 @@ export default {
 			</BlockControls>
 		);
 	},
-	save: function FlexLayoutStyle( { selector, layout, style } ) {
+	save: function FlexLayoutStyle( { selector, layout, style, blockName } ) {
 		const { orientation = 'horizontal' } = layout;
 		const blockGapSupport = useSetting( 'spacing.blockGap' );
 		const hasBlockGapStylesSupport = blockGapSupport !== null;
+		// If a block's block.json skips serialization for spacing or spacing.blockGap,
+		// don't apply the user-defined value to the styles.
 		const blockGapValue =
-			style?.spacing?.blockGap ?? 'var( --wp--style--block-gap, 0.5em )';
+			style?.spacing?.blockGap &&
+			! shouldSkipSerialization( blockName, 'spacing', 'blockGap' )
+				? style?.spacing?.blockGap
+				: 'var( --wp--style--block-gap, 0.5em )';
 		const justifyContent =
 			justifyContentMap[ layout.justifyContent ] ||
 			justifyContentMap.left;
