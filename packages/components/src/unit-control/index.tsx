@@ -150,7 +150,7 @@ function UnitControl(
 			const changeProps = { event, data };
 
 			onChange(
-				`${ validParsedQuantity }${ validParsedUnit }`,
+				`${ validParsedQuantity ?? '' }${ validParsedUnit }`,
 				changeProps
 			);
 			onUnitChange( validParsedUnit, changeProps );
@@ -234,7 +234,7 @@ function UnitControl(
 				ref={ forwardedRef }
 				size={ size }
 				suffix={ inputSuffix }
-				value={ parsedQuantity }
+				value={ parsedQuantity ?? '' }
 				step={ step }
 				__unstableStateReducer={ composeStateReducers(
 					unitControlStateReducer,
