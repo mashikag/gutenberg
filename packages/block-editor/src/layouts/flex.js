@@ -18,7 +18,7 @@ import { Button, ToggleControl, Flex, FlexItem } from '@wordpress/components';
 import { appendSelectors } from './utils';
 import useSetting from '../components/use-setting';
 import { BlockControls, JustifyContentControl } from '../components';
-import { shouldSkipSerialization } from '../hooks/style';
+import { shouldSkipSerialization } from '../hooks/utils';
 
 // Used with the default, horizontal flex orientation.
 const justifyContentMap = {

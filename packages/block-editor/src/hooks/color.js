@@ -26,8 +26,12 @@ import {
 	getGradientValueBySlug,
 	getGradientSlugByValue,
 } from '../components/gradients';
-import { cleanEmptyObject, transformStyles, immutableSet } from './utils';
-import { shouldSkipSerialization } from './style';
+import {
+	cleanEmptyObject,
+	transformStyles,
+	immutableSet,
+	shouldSkipSerialization,
+} from './utils';
 import ColorPanel from './color-panel';
 import useSetting from '../components/use-setting';
 

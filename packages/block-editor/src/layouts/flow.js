@@ -14,7 +14,7 @@ import { Icon, positionCenter, stretchWide } from '@wordpress/icons';
  */
 import useSetting from '../components/use-setting';
 import { appendSelectors } from './utils';
-import { shouldSkipSerialization } from '../hooks/style';
+import { shouldSkipSerialization } from '../hooks/utils';
 
 export default {
 	name: 'default',
