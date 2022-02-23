@@ -73,7 +73,7 @@ class WP_Webfonts {
 	public function register_used_font_families_from_global_styles() {
 		$global_styles = gutenberg_get_global_styles();
 
-		// Get from blocks
+		// Register used fonts from blocks
 		foreach ( $global_styles['blocks'] as $id => $setting ) {
 			if ( array_key_exists( 'typography', $setting ) && array_key_exists( 'fontFamily', $setting['typography'] ) ) {
 				$font_family_custom = $setting['typography']['fontFamily'];
@@ -88,7 +88,7 @@ class WP_Webfonts {
 			}
 		}
 
-		// Get from elements
+		// Register used fonts from elements
 		foreach ( $global_styles['elements'] as $id => $setting ) {
 			if ( array_key_exists( 'typography', $setting ) && array_key_exists( 'fontFamily', $setting['typography'] ) ) {
 				$font_family_custom = $setting['typography']['fontFamily'];
@@ -103,7 +103,7 @@ class WP_Webfonts {
 			}
 		}
 
-		// Get from global settings
+		// Register used fonts from global settings
 		if ( array_key_exists( 'typography', $global_styles ) && array_key_exists( 'fontFamily', $global_styles['typography'] ) ) {
 			$font_family_custom = $global_styles['typography']['fontFamily'];
 
