@@ -11,8 +11,8 @@ import useRefEffect from '../use-ref-effect';
 /** @typedef {(e: DragEvent) => void} DragEventHandler */
 /** @typedef {(e: MouseEvent) => void} MouseEventHandler */
 
-/** @typedef {DragEventHandler | null} DragRef */
-/** @typedef {MouseEventHandler | null} MouseRef */
+/** @typedef {DragEventHandler | null} DragRefValue */
+/** @typedef {MouseEventHandler | null} MouseRefValue */
 
 /**
  * A hook to facilitate drag and drop handling.
@@ -41,12 +41,22 @@ export default function useDropZone( {
 	// to allow us to unset the current value for these refs;
 	// otherwise we would only infer the event handler types
 	// because they are required as function parameters.
-	const onDropRef = useRef( /** @type { DragRef } */ ( _onDrop ) );
-	const onDragStartRef = useRef( /** @type { DragRef } */ ( _onDragStart ) );
-	const onDragEnterRef = useRef( /** @type { DragRef } */ ( _onDragEnter ) );
-	const onDragLeaveRef = useRef( /** @type { DragRef } */ ( _onDragLeave ) );
-	const onDragEndRef = useRef( /** @type { MouseRef } */ ( _onDragEnd ) );
-	const onDragOverRef = useRef( /** @type { DragRef } */ ( _onDragOver ) );
+	const onDropRef = useRef( /** @type { DragRefValue } */ ( _onDrop ) );
+	const onDragStartRef = useRef(
+		/** @type { DragRefValue } */ ( _onDragStart )
+	);
+	const onDragEnterRef = useRef(
+		/** @type { DragRefValue } */ ( _onDragEnter )
+	);
+	const onDragLeaveRef = useRef(
+		/** @type { DragRefValue } */ ( _onDragLeave )
+	);
+	const onDragEndRef = useRef(
+		/** @type { MouseRefValue } */ ( _onDragEnd )
+	);
+	const onDragOverRef = useRef(
+		/** @type { DragRefValue } */ ( _onDragOver )
+	);
 
 	return useRefEffect(
 		( element ) => {
