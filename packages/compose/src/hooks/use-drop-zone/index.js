@@ -8,39 +8,20 @@ import { useRef } from '@wordpress/element';
  */
 import useRefEffect from '../use-ref-effect';
 
-/* eslint-disable jsdoc/valid-types */
-/**
- * @template T
- * @param {T} value
- * @return {import('react').MutableRefObject<T|null>} A ref with the value.
- */
-function useFreshRef( value ) {
-	/* eslint-enable jsdoc/valid-types */
-	/* eslint-disable jsdoc/no-undefined-types */
-	/** @type {import('react').MutableRefObject<T>} */
-	/* eslint-enable jsdoc/no-undefined-types */
-	// Disable reason: We're doing something pretty JavaScript-y here where the
-	// ref will always have a current value that is not null or undefined but it
-	// needs to start as undefined. We don't want to change the return type so
-	// it's easier to just ts-ignore this specific line that's complaining about
-	// undefined not being part of T.
-	// @ts-ignore
-	const ref = useRef();
-	ref.current = value;
-	return ref;
-}
+/** @typedef {(e: DragEvent) => void} WPDragEventHandler */
+/** @typedef {(e: MouseEvent) => void} WPDragEndHandler */
 
 /**
  * A hook to facilitate drag and drop handling.
  *
- * @param {Object}                  props             Named parameters.
- * @param {boolean}                 props.isDisabled  Whether or not to disable the drop zone.
- * @param {(e: DragEvent) => void}  props.onDragStart Called when dragging has started.
- * @param {(e: DragEvent) => void}  props.onDragEnter Called when the zone is entered.
- * @param {(e: DragEvent) => void}  props.onDragOver  Called when the zone is moved within.
- * @param {(e: DragEvent) => void}  props.onDragLeave Called when the zone is left.
- * @param {(e: MouseEvent) => void} props.onDragEnd   Called when dragging has ended.
- * @param {(e: DragEvent) => void}  props.onDrop      Called when dropping in the zone.
+ * @param {Object}                         props             Named parameters.
+ * @param {boolean}                        props.isDisabled  Whether or not to disable the drop zone.
+ * @param {WPDragEventHandler | undefined} props.onDragStart Called when dragging has started.
+ * @param {WPDragEventHandler | undefined} props.onDragEnter Called when the zone is entered.
+ * @param {WPDragEventHandler | undefined} props.onDragOver  Called when the zone is moved within.
+ * @param {WPDragEventHandler | undefined} props.onDragLeave Called when the zone is left.
+ * @param {WPDragEndHandler | undefined}   props.onDragEnd   Called when dragging has ended.
+ * @param {WPDragEventHandler | undefined} props.onDrop      Called when dropping in the zone.
  *
  * @return {import('react').RefCallback<HTMLElement>} Ref callback to be passed to the drop zone element.
  */
@@ -53,12 +34,12 @@ export default function useDropZone( {
 	onDragEnd: _onDragEnd,
 	onDragOver: _onDragOver,
 } ) {
-	const onDropRef = useFreshRef( _onDrop );
-	const onDragStartRef = useFreshRef( _onDragStart );
-	const onDragEnterRef = useFreshRef( _onDragEnter );
-	const onDragLeaveRef = useFreshRef( _onDragLeave );
-	const onDragEndRef = useFreshRef( _onDragEnd );
-	const onDragOverRef = useFreshRef( _onDragOver );
+	const onDropRef = useRef( _onDrop );
+	const onDragStartRef = useRef( _onDragStart );
+	const onDragEnterRef = useRef( _onDragEnter );
+	const onDragLeaveRef = useRef( _onDragLeave );
+	const onDragEndRef = useRef( _onDragEnd );
+	const onDragOverRef = useRef( _onDragOver );
 
 	return useRefEffect(
 		( element ) => {
@@ -219,12 +200,12 @@ export default function useDropZone( {
 			ownerDocument.addEventListener( 'dragenter', maybeDragStart );
 
 			return () => {
-				onDropRef.current = null;
-				onDragStartRef.current = null;
-				onDragEnterRef.current = null;
-				onDragLeaveRef.current = null;
-				onDragEndRef.current = null;
-				onDragOverRef.current = null;
+				onDropRef.current = undefined;
+				onDragStartRef.current = undefined;
+				onDragEnterRef.current = undefined;
+				onDragLeaveRef.current = undefined;
+				onDragEndRef.current = undefined;
+				onDragOverRef.current = undefined;
 				delete element.dataset.isDropZone;
 				element.removeEventListener( 'drop', onDrop );
 				element.removeEventListener( 'dragenter', onDragEnter );
